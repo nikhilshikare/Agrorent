@@ -11,4 +11,4 @@ from django.http import HttpResponse
 # Create your views here.
 
 def home(request):
-    return HttpResponse("Hello World!! We Have Just Started a New Project")
+    return render(request,"home.html")

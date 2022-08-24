@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %}Home AgroRent {% endblock title %}
+{% block body %}
+<style>
+  .home_mid_heading{
+    display: flex;
+    justify-content: center;
+    background-color: rgb(37, 31, 31);
+    font-weight: bold;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+</style>
+
+<!-- navbar for home start here -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Hii Nikhil, Welcome To AgroRent</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Search</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/services">Sign-In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About Us</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+<!-- automatic moving ohoto starts here -->
+<div class="container-fluid  px-0">
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img  src="/static/home/home_tractor_img.jpg" class="d-block w-100" id="img" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="/static/home/home_cuttor_img.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="/static/home/home_spray_img.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+          <img src="/static/home/home_cutter1_img.jpg" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- second part after images hovering start here -->
+  <div class="home_mid_heading">
+    <h2 style="padding: 6px; color:white">Select Agro-Tools By Catogery</h2>
+  </div>
+
+  <!-- third part for select by vatagory is starting here -->
+<div class="container-fluid px-0 my-2">
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card text-white bg-dark mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Tractors</h5>
+          <p class="card-text">Explore the various type of <b>Tractors</b> Range <br>like models , horse-power and meny more things</p>
+          <a href="#" class="btn btn-primary">Select</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card text-white bg-success mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Spray Machine</h5>
+          <p class="card-text">Chose A Different models Based On The your <br>requirements. like water capacity , motor or menually operated Spray etc</p>
+          <a href="#" class="btn btn-primary">Select</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="card text-white bg-danger  mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Cuttor-Tool</h5>
+          <p class="card-text">There are various Tools used For Different Purpose <br> like <b>sugarcane-cuttors</b>,<b>crop cuttors</b>etc. Chose from
+          large varity </p>
+          <a href="#" class="btn btn-primary">Select</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="card text-white bg-warning mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Attachments Of Agro-Tools</h5>
+          <p class="card-text">Explore The Large Varity Of <b>Attachments</b> of Agro Mechine <br> like tractor Attachments , sprayer machine and meny more Things</p>
+          <a href="#" class="btn btn-primary">Select</a>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>
+
+{% endblock body %}
