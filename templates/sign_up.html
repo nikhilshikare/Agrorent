@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+{% block title %}Home AgroRent {% endblock title %}
+{% block body %}
+
+
+<!-- --------------------------------------------Css Code Body Start From Here----------------------------- -->
+
+<style>
+#sign_up{
+  visibility: hidden;
+}
+#otp{
+  display: none;
+}
+
+</style>
+
+
+<!-- --------------------------------------------JavaScript Code Body Start From Here----------------------------- -->
+<script type="text/javascript">
+  var otp=000;
+
+ //  <!-- ----------------scripts for Sending Otp And Checking It------------------- -->  
+ $(document).ready(function() { 
+    $(document).on('click','#send_otp', function (e) {
+      e.preventDefault();
+      var spinner = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading... </span></div> Please wait..'
+      $('#send_otp').html(spinner);
+      $.ajax({
+          type: 'POST',
+          url: '/otp',
+          data: {
+              email: $('#email').val(),
+              fname: $('#fname').val(),
+              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function (data) {
+
+              if(data != "0")
+              {   
+                  document.getElementById("otp").style.display="block";
+                    swal({
+                      title: 'Otp Send!!',
+                      text: 'Otp Sended Succesfully.',
+                      imageUrl: '/static/home/success.jpg',
+                      imageWidth: 100,
+                      imageHeight: 90,
+                      imageAlt: 'Success',
+                  }) 
+                  otp = data;
+                  speek_data('Otp Sended Succesfully.');
+                  document.getElementById("send_otp").disabled = true;
+
+               // <!-------------------- Timer For The Enable back The Send Otp Button------------------------ -->
+               var Timer_btn = 120;
+               //<-------------------- Timer For Redirecting to home------->
+               function start_timer(){
+                   my_interval = setInterval(function redirect(){
+                       document.getElementById('send_otp').innerHTML = '<h6>Resent <b>otp</b> In.'+Timer_btn+'</h6>';
+                       Timer_btn=Timer_btn-1;
+                       //<-------------If redirect_time is equal Redirecting to home------->
+                       if (Timer_btn == 0){
+                           clearInterval(my_interval);
+                           $('#send_otp').text("send Otp");
+                           document.getElementById("send_otp").disabled = false;
+                       }
+                   },1000)
+               }
+               start_timer();
+           
+
+              // <!--------------------End  Timer For The Enable back The Send Otp Button------------------------ -->
+              }
+              else{
+                sweetAlert("Error!", "<b style='color:red';>Something Went</b>Wrong!", "error");
+              }
+              }
+        });
+    });
+  });
+
+    function checkOtp(){
+     var user_otp = document.getElementById("otp").value;
+      if (otp == user_otp){
+        document.getElementById("sign_up").style.visibility="visible";
+        swal({
+          title: 'Verfied Succesfully!!',
+          text: 'Email Verfied Succesfully.',
+          imageUrl: '/static/home/success.jpg',
+          imageWidth: 100,
+          imageHeight: 90,
+          imageAlt: 'Success',
+      }) 
+      }
+      else{
+        sweetAlert("Invalid Otp!", "<b>User Please Enter <b style='color:red';>Valid Otp</b>..!</b>", "warning");
+      }
+    }
+
+
+//  <!-- ----------------scripts for Prevent Form From Reloading & Submittimg The Signup Form------------------- -->
+
+
+$(document).on('submit', '#post-form', function (e) {
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: '/send',
+        data: {
+            fname:$('#fname').val(),
+            lname:$('#lname').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            password: $('#password').val(),
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+        },
+        success: function (data) {
+
+          swal({
+            title: 'Succesfully Blocked!!',
+            text: 'User Blocked! Succesfully.',
+            imageUrl: '/static/success.jpg',
+            imageWidth: 100,
+            imageHeight: 90,
+            imageAlt: 'Success',
+        }) 
+        speek_data('User Blocked Succesfully.');
+
+        }
+    });
+});
+
+</script>
+
+
+
+
+
+<!-- --------------------------------------------Html Code Body Start From Here----------------------------- -->
+<div class="container">
+    <!-- Section: Design Block -->
+<section class="text-center">
+    <!-- Background image -->
+    <div class="p-5 bg-image" style="
+          background-image: url('/static/home/sign_up.jpg');
+          height: 300px;
+          "></div>
+    <!-- Background image -->
+
+    <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+          margin-top: -100px;
+          background: hsla(0, 0%, 100%, 0.8);
+          backdrop-filter: blur(30px);
+          ">
+
+      <div class="card-body py-5 px-md-5">
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-8">
+            <h2 class="fw-bold mb-5">Sign up now  <a id='head' href='/'><img id="home_logo" src="/static/home/home.jpg" alt="" width="45" height="40" class="d-inline-block align-text-top"></a></h2>
+            <form id="post-form">
+              {% csrf_token %}
+              <!-- 2 column grid layout with text inputs for the first and last names -->
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <input placeholder="First Name" name="fname" required pattern="[^' ']+" type="text" id="fname" class="form-control" />
+                    <label class="form-label" for="fname">First name</label>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                  <div class="form-outline">
+                    <input placeholder="Last Name" name="lname" required pattern="[^' ']+"  type="text" id="lname" class="form-control" />
+                    <label class="form-label" for="lname">Last name</label>
+                  </div>
+                </div>
+              </div>
+  
+              <!-- Email input -->
+              <div class="form-outline mb-4">
+                <input placeholder="Enter E-mail" name="email" required pattern="[^' ']+"  type="email" id="email" class="form-control" />
+                <label class="form-label" for="email">Email address</label>
+              </div>
+
+              <!-- Phone No input -->
+              <div class="form-outline mb-4">
+                <input placeholder="Enter Phone" name="phone" required pattern="[^' ']+" minlength="10" type="number" id="phone" class="form-control" />
+                <label class="form-label" for="phone">Phone No</label>
+              </div>
+  
+              <!-- Password input -->
+              <div  class="form-outline mb-4">
+                <input placeholder="Enter Password" name="password" required pattern="[^' ']+" type="password" id="password" class="form-control" />
+                <label class="form-label" for="password">Password</label>
+              </div>
+
+              <!------------------------------------------------- Otp Authentication Field Start Here -------------------------------------->
+              <div  class="form-outline mb-4">
+                <button type="button"  id="send_otp" class="btn btn-outline-dark">Send Otp</button>
+                <button type="button" id="verify" class="btn btn-outline-success" onclick="checkOtp()">Verify</button>
+              </div>
+              
+                <!-- Otp  No input -->
+                <div class="form-outline mb-4">
+                  <input placeholder="Enter 4 Digit Otp" name="otp" required pattern="[^' ']+" minlength="4" type="number" id="otp" class="form-control" />
+                </div>
+
+              <!------------------------------------------------- Otp Authentication Field End Here -------------------------------------->
+              <!-- Submit button -->
+              <button type="submit" id="sign_up" class="btn btn-primary btn-block mb-4">
+                Sign up
+              </button>
+              <div>
+                <p class="mb-0">Already Registered ? <a href="/sign_in" class="text-white-50 fw-bold"><b style="color: rgb(0, 206, 34);">Sign-in</b> </a>
+                </p>
+            </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Section: Design Block -->
+</div>
+
+
+{% endblock body %}
