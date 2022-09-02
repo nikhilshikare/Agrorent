@@ -12,6 +12,9 @@
 #otp{
   display: none;
 }
+#send_otp,#verify{
+  visibility: visible;
+}
 
 </style>
 
@@ -23,6 +26,8 @@
  //  <!-- ----------------scripts for Sending Otp And Checking It------------------- -->  
  $(document).ready(function() { 
     $(document).on('click','#send_otp', function (e) {
+      document.getElementById("send_otp").disabled = true;
+      document.getElementById("verify").disabled = true;
       e.preventDefault();
       var spinner = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading... </span></div> Please wait..'
       $('#send_otp').html(spinner);
@@ -35,7 +40,6 @@
               csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
           },
           success: function (data) {
-
               if(data != "0")
               {   
                   document.getElementById("otp").style.display="block";
@@ -48,9 +52,9 @@
                       imageAlt: 'Success',
                   }) 
                   otp = data;
+                  document.getElementById("verify").disabled = false;
                   speek_data('Otp Sended Succesfully.');
-                  document.getElementById("send_otp").disabled = true;
-
+               
                // <!-------------------- Timer For The Enable back The Send Otp Button------------------------ -->
                var Timer_btn = 120;
                //<-------------------- Timer For Redirecting to home------->
@@ -68,19 +72,20 @@
                }
                start_timer();
            
-
               // <!--------------------End  Timer For The Enable back The Send Otp Button------------------------ -->
               }
-              else{
-                sweetAlert("Error!", "<b style='color:red';>Something Went</b>Wrong!", "error");
-              }
-              }
+              },
+              error: function (response) {
+                  alert('Something Went Wrong...');
+              }      
+
         });
     });
   });
 
     function checkOtp(){
      var user_otp = document.getElementById("otp").value;
+
       if (otp == user_otp){
         document.getElementById("sign_up").style.visibility="visible";
         swal({
@@ -90,7 +95,10 @@
           imageWidth: 100,
           imageHeight: 90,
           imageAlt: 'Success',
-      }) 
+      });
+      document.getElementById("send_otp").style.visibility="hidden";
+      document.getElementById("verify").style.visibility="hidden";
+      document.getElementById("otp").style.display="none";
       }
       else{
         sweetAlert("Invalid Otp!", "<b>User Please Enter <b style='color:red';>Valid Otp</b>..!</b>", "warning");
@@ -102,31 +110,48 @@
 
 
 $(document).on('submit', '#post-form', function (e) {
+  document.getElementById("sign_up").disabled = true;
+  var spinner = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading... </span></div> Saving info..'
+  $('#sign_up').html(spinner);
     e.preventDefault();
     $.ajax({
         type: 'POST',
-        url: '/send',
+        url: '/sign_up',
         data: {
             fname:$('#fname').val(),
             lname:$('#lname').val(),
             email: $('#email').val(),
             phone: $('#phone').val(),
+            username: $('#username').val(),
             password: $('#password').val(),
             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
         },
         success: function (data) {
-
-          swal({
-            title: 'Succesfully Blocked!!',
-            text: 'User Blocked! Succesfully.',
-            imageUrl: '/static/success.jpg',
-            imageWidth: 100,
-            imageHeight: 90,
-            imageAlt: 'Success',
-        }) 
-        speek_data('User Blocked Succesfully.');
-
+          if(data=="3"){
+              $('#sign_up').text("Sign Up");
+              document.getElementById("sign_up").disabled = false;
+              swal({
+                title: 'Success!!',
+                text: 'Registerd Succesfully..',
+                imageUrl: '/static/home/success.jpg',
+                imageWidth: 100,
+                imageHeight: 90,
+                imageAlt: 'Success',
+            });
+            speek_data('Sign-up Info Saved...');
+            window.location = "/sign_in";
+          }
+          else if(data=="0"){
+            sweetAlert("Error!!", "<b><b style='color:red';>Username Alredy Exist</b>..!</b>", "error");
+          }
+          else{
+            sweetAlert("Error!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "error");
+          }
+        },
+        error: function (response) {
+            alert('Something Went Wrong...');
         }
+
     });
 });
 
@@ -186,12 +211,19 @@ $(document).on('submit', '#post-form', function (e) {
                 <input placeholder="Enter Phone" name="phone" required pattern="[^' ']+" minlength="10" type="number" id="phone" class="form-control" />
                 <label class="form-label" for="phone">Phone No</label>
               </div>
+
+               <!-- Username input -->
+              <div class="form-outline mb-4">
+                  <input maxlength="20" placeholder="abc0000" name="username" required pattern="[^' ']+" type="text" id="username" class="form-control" />
+                  <label style="color: red;" class="form-label" for="fname">Use username+phone's First 4 digit To avoid Error</label>
+              </div>
   
               <!-- Password input -->
               <div  class="form-outline mb-4">
-                <input placeholder="Enter Password" name="password" required pattern="[^' ']+" type="password" id="password" class="form-control" />
+                <input placeholder="Set Password" name="password" required pattern="[^' ']+" type="password" id="password" class="form-control" />
                 <label class="form-label" for="password">Password</label>
               </div>
+
 
               <!------------------------------------------------- Otp Authentication Field Start Here -------------------------------------->
               <div  class="form-outline mb-4">
@@ -212,7 +244,7 @@ $(document).on('submit', '#post-form', function (e) {
               <div>
                 <p class="mb-0">Already Registered ? <a href="/sign_in" class="text-white-50 fw-bold"><b style="color: rgb(0, 206, 34);">Sign-in</b> </a>
                 </p>
-            </div>
+             </div>
               </div>
             </form>
           </div>

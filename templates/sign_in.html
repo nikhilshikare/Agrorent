@@ -20,10 +20,51 @@
 
 
 <!-- --------------------------------------------JavaScript Code Body Start From Here----------------------------- -->
+<script type="text/javascript">
 
+//  <!-- ----------------scripts for Prevent Form From Reloading & Submittimg The SignIn Form------------------- -->
+$(document).on('submit', '#post-form', function (e) {
+    document.getElementById("login_btn").disabled = true;
+    var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div>  Signing in..'
+    $('#login_btn').html(spinner);
+      e.preventDefault();
+      $.ajax({
+          type: 'POST',
+          url: '/sign_in',
+          data: {
+              username: $('#username').val(),
+              password: $('#password').val(),
+              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function (data) {
+            if(data=="1"){
+                $('#login_btn').text("Login");
+                swal({
+                  title: 'Success!!',
+                  text: 'Login Succesfully..',
+                  imageUrl: '/static/home/success.jpg',
+                  imageWidth: 100,
+                  imageHeight: 90,
+                  imageAlt: 'Success',
+              });
+              speek_data('Login Succesfully...');
+              window.location = "/";
+            }
+            else{
+                $('#login_btn').html("Login");
+                document.getElementById("login_btn").disabled = false;
+                sweetAlert("Error!!", "<b><b style='color:red';>Invalid Crediantials</b>..!</b>", "error");
+            }
+          },
+          error: function (response) {
+              alert('Something Went Wrong...');
+          }
+  
+      });
+  });
+  
 
-
-
+</script>
 
 
 <!-- --------------------------------------------Html Code Body Start From Here----------------------------- -->
@@ -38,26 +79,25 @@
                             <a id='head' href='/'><img id="home_logo" src="/static/home/home.jpg" alt="" width="45" height="40" class="d-inline-block align-text-top"></a>
                         </div>
                         <div class="mb-md-5 mt-md-4 pb-5">
-                            <form action="">
+                            <form id="post-form">
+                                {% csrf_token %}
                                 <h2 class="fw-bold mb-2 text-uppercase">Login To <b style="color: rgb(26, 150, 26);">AgroRent</b></h2>
                                 <p class="text-white-50 mb-5">Please enter your username and password!</p>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input required pattern="[^' ']+"  name="username" type="text"
-                                        id="typeEmailX" class="form-control form-control-lg" />
-                                    <label class="form-label" for="typeEmailX">Username</label>
+                                    <input maxlength="12" required pattern="[^' ']+"  name="username" type="text" id="username" class="form-control form-control-lg" />
+                                    <label class="form-label" for="username"> <p>Enter Username</p></label>
                                 </div>
 
                                 <div class="form-outline form-white mb-4">
-                                    <input required  pattern="[^' ']+"  name="password" type="password" id="typePasswordX"
-                                        class="form-control form-control-lg" />
-                                    <label class="form-label" for="typePasswordX">Password</label>
+                                    <input required  pattern="[^' ']+"  name="password" type="password" id="password" class="form-control form-control-lg" />
+                                    <label class="form-label" for="password">Password</label>
                                 </div>
 
                                 <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a>
                                 </p>
 
-                                <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+                                <button id="login_btn" class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
                             </form>
                         </div>
 
