@@ -12,17 +12,33 @@
 </style>
 
 <!-- navbar for home start here -->
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
     {% if request.user.is_anonymous %}
-    <a class="navbar-brand" href="/">Hii User, Welcome To AgroRent</a>
+    <a class="navbar-brand" >Hii <b style="color: red;">User</b> , Welcome To AgroRent</a>
     {% else %}
-    <a class="navbar-brand" href="/">Hii {{request.user.first_name}}, Welcome To AgroRent</a>
+    <a class="navbar-brand">Hii <b style="color: green;">{{request.user.first_name}}</b>, Welcome To AgroRent</a>
     {% endif %}
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    {% if not request.user.is_anonymous %}
+    <!-- Example single danger button -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger dropdown-toggle mx-5" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">My Tools</a></li>
+            <li><a class="dropdown-item" href="/add_tools">Upload / Add Tools</a></li>
+            <li><a class="dropdown-item" href="#">Request</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Separated link</a></li>
+          </ul>
+        </div>
+    {% endif %}
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -44,21 +60,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/about">About Us</a>
         </li>
-        {% if not request.user.is_anonymous %}
-        <!-- Example single danger button -->
-            <div class="btn-group">
-              <button type="button" class="btn btn-danger dropdown-toggle mx-5" data-bs-toggle="dropdown" aria-expanded="false">
-                Menu
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Menu</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Separated link</a></li>
-              </ul>
-            </div>
-        {% endif %}
       </ul>
     </div>
     

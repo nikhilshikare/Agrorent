@@ -1,0 +1,144 @@
+{% extends 'base.html' %} {% block title %}Home AgroRent {% endblock title %}
+{%block body %}
+
+<!-- Style startted from here -->
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    #background-img {
+        position: absolute;
+        z-index: -1;
+        opacity: 0.6;
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    .gradient-custom-3 {
+        /* fallback for old browsers */
+        background: #84fab0;
+
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: -webkit-linear-gradient(to right,
+                rgba(132, 250, 176, 0.5),
+                rgba(143, 211, 244, 0.5));
+
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: linear-gradient(to right,
+                rgba(132, 250, 176, 0.5),
+                rgba(143, 211, 244, 0.5));
+    }
+
+    .gradient-custom-4 {
+        /* fallback for old browsers */
+        background: #84fab0;
+
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: -webkit-linear-gradient(to right,
+                rgba(132, 250, 176, 1),
+                rgba(143, 211, 244, 1));
+
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: linear-gradient(to right,
+                rgba(132, 250, 176, 1),
+                rgba(143, 211, 244, 1));
+
+
+    }
+    .round{
+        border:1.5px solid green;
+        border-radius: 35px;
+        padding: 1.1rem 1.1rem 1.1rem 1.1rem ;
+    }
+
+</style>
+
+<!-- javascript tag started from here -->
+<script type="text/javascript"></script>
+
+<!-- html code startimng from here -->
+<img id="background-img" src="/static/Tools/addtool_back_img.jpg" alt="Agrorent" />
+
+<section class="vh-100 bg-image" style="
+    background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');
+  ">
+    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card" style="border-radius: 15px">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">
+                                Add Agro Tool
+                                <a id="head" href="/"><img id="home_logo" src="/static/home/home.jpg" alt="" width="45"
+                                        height="40" class="d-inline-block align-text-top" /></a>
+                            </h2>
+                            <form>
+                                <div class="form-outline mb-2">
+                                    <input type="file"id="image" class="form-control form-control-lg" name="image"accept="image/png, image/jpeg , image/jpg">
+                                    <label style="color: red;" class="form-label" for="image">Chose Tool Photo</label>
+                                </div>
+                                <div class="form-outline mb-2">
+                                    <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+                                    <label class="form-label" for="form3Example1cg">Your Name</label>
+                                </div>
+
+                                <div class="form-outline mb-2">
+                                    <input type="email" id="email" class="form-control form-control-lg" />
+                                    <label class="form-label" for="email">Your Email</label>
+                                </div>
+
+                                <div class="form-outline mb-2">
+                                    <input type="email" id="phone" class="form-control form-control-lg" />
+                                    <label class="form-label" for="phone">Your Phone</label>
+                                </div>
+
+                                <div class="form-outline mb-4 round">
+                                    <h3 style="color: green;">Add Tool Specification</h3>
+
+                                    <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
+                                        <option selected>Select Tool From List menu</option>
+                                        <option value="1">One</option>
+                                        <option value="2">Two</option>
+                                        <option value="3">Three</option>
+                                    </select>
+
+                                    <input id="line1"  class="form-control form-control-sm mb-3" type="text" placeholder="Specification 1 ,hp , wires" aria-label=".form-control-sm example">
+                                    
+                                    <input id="line2"  class="form-control form-control-sm mb-3" type="text" placeholder="Specification 2 , power , engine " aria-label=".form-control-sm example">
+                                    
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a comment here" id="text_desc" style="height: 100px"></textarea>
+                                        <label for="text_desc">Write Short Info of tool i.e handling , Uses etc.</label>
+                                      </div>
+                                </div>
+
+                                <div class="form-check d-flex justify-content-center mb-5">
+                                    <input class="form-check-input me-2" type="checkbox" value=""
+                                        id="form2Example3cg" />
+                                    <label class="form-check-label" for="form2Example3g">
+                                        I agree all statements in
+                                        <a href="#!" class="text-body"><u>Terms of service</u></a>
+                                    </label>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <button type="button" id="submit" name="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                        Submit
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

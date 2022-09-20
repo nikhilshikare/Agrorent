@@ -37,52 +37,74 @@
           data: {
               email: $('#email').val(),
               fname: $('#fname').val(),
+              phone: $('#phone').val(),
+              username: $('#username').val(),
               csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
           },
           success: function (data) {
-              if(data != "0")
+              if(data !="-1" && data!="0" && data!="1"&& data!="2")
               {   
-                  document.getElementById("otp").style.display="block";
-                    swal({
-                      title: 'Otp Send!!',
-                      text: 'Otp Sended Succesfully.',
-                      imageUrl: '/static/home/success.jpg',
-                      imageWidth: 100,
-                      imageHeight: 90,
-                      imageAlt: 'Success',
-                  }) 
-                  otp = data;
-                  document.getElementById("verify").disabled = false;
-                  speek_data('Otp Sended Succesfully.');
-               
-               // <!-------------------- Timer For The Enable back The Send Otp Button------------------------ -->
-               var Timer_btn = 120;
-               //<-------------------- Timer For Redirecting to home------->
-               function start_timer(){
-                   my_interval = setInterval(function redirect(){
-                       document.getElementById('send_otp').innerHTML = '<h6>Resent <b>otp</b> In.'+Timer_btn+'</h6>';
-                       Timer_btn=Timer_btn-1;
-                       //<-------------If redirect_time is equal Redirecting to home------->
-                       if (Timer_btn == 0){
-                           clearInterval(my_interval);
-                           $('#send_otp').text("send Otp");
-                           document.getElementById("send_otp").disabled = false;
-                       }
-                   },1000)
-               }
-               start_timer();
-           
-              // <!--------------------End  Timer For The Enable back The Send Otp Button------------------------ -->
+                    document.getElementById("otp").style.display="block";
+                      swal({
+                        title: 'Otp Send!!',
+                        text: 'Otp Sended Succesfully.',
+                        imageUrl: '/static/home/success.jpg',
+                        imageWidth: 100,
+                        imageHeight: 90,
+                        imageAlt: 'Success',
+                    }) 
+                    otp = data;
+                    document.getElementById("verify").disabled = false;
+                    speek_data('Otp Sended Succesfully.');
+                
+                    // <!-------------------- Timer For The Enable back The Send Otp Button------------------------ -->
+                    var Timer_btn = 120;
+                    //<-------------------- Timer For Redirecting to home------->
+                    function start_timer(){
+                        my_interval = setInterval(function redirect(){
+                            document.getElementById('send_otp').innerHTML = '<h6>Resent <b>otp</b> In.'+Timer_btn+'</h6>';
+                            Timer_btn=Timer_btn-1;
+                            //<-------------If redirect_time is equal Redirecting to home------->
+                            if (Timer_btn == 0){
+                                clearInterval(my_interval);
+                                $('#send_otp').text("send Otp");
+                                document.getElementById("send_otp").disabled = false;
+                            }
+                        },1000)
+                  }
+                  start_timer();
+              
+                  // <!--------------------End  Timer For The Enable back The Send Otp Button------------------------ -->
               }
+
+              else if(data=="0"){
+                sweetAlert("Error!!", "<b><b style='color:red';>Username Alredy Exist</b>..!</b>", "error");
+              }
+              else if(data=="1"){
+                sweetAlert("Error!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "error");
+              }
+              else if (data=="2"){// indicate 2 for email exist in database
+                sweetAlert("Error!!", "<b><b style='color:red';>Email Alredy Exist</b>..!</b>", "error");
+              }
+              else{// indicate -1 to show error when otp dendinf faild!!!! 
+                alert("Something Went Wrong..Please Try Again Later");
+              }
+              if(data =="-1" || data =="0" ||  data =="1" ||  data =="2"){
+                $('#send_otp').text("send Otp");
+                document.getElementById("send_otp").disabled = false;
+              }
+
+
               },
               error: function (response) {
                   alert('Something Went Wrong...');
               }      
-
         });
     });
   });
 
+
+    // <!-- Function to check otp start here-->
     function checkOtp(){
      var user_otp = document.getElementById("otp").value;
 
@@ -105,7 +127,7 @@
       }
     }
 
-
+  // <!-- Function to check otp End here-->
 //  <!-- ----------------scripts for Prevent Form From Reloading & Submittimg The Signup Form------------------- -->
 
 
@@ -143,9 +165,18 @@ $(document).on('submit', '#post-form', function (e) {
           }
           else if(data=="0"){
             sweetAlert("Error!!", "<b><b style='color:red';>Username Alredy Exist</b>..!</b>", "error");
+            $('#sign_up').text("Sign Up");
+            document.getElementById("sign_up").disabled = false;
           }
-          else{
-            sweetAlert("Error!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "error");
+          else if(data=="1"){
+              sweetAlert("Error!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "error");
+              $('#sign_up').text("Sign Up");
+              document.getElementById("sign_up").disabled = false;
+          }
+          else{// indicate 2 for email
+            sweetAlert("Error!!", "<b><b style='color:red';>Email Alredy Exist</b>..!</b>", "error");
+            $('#sign_up').text("Sign Up");
+            document.getElementById("sign_up").disabled = false;
           }
         },
         error: function (response) {
@@ -166,10 +197,7 @@ $(document).on('submit', '#post-form', function (e) {
     <!-- Section: Design Block -->
 <section class="text-center">
     <!-- Background image -->
-    <div class="p-5 bg-image" style="
-          background-image: url('/static/home/sign_up.jpg');
-          height: 300px;
-          "></div>
+    <div class="p-5 bg-image" style="background-image: url('/static/home/sign_up.jpg');height: 300px;"></div>
     <!-- Background image -->
 
     <div class="card mx-4 mx-md-5 shadow-5-strong" style="
@@ -215,7 +243,7 @@ $(document).on('submit', '#post-form', function (e) {
                <!-- Username input -->
               <div class="form-outline mb-4">
                   <input maxlength="20" placeholder="abc0000" name="username" required pattern="[^' ']+" type="text" id="username" class="form-control" />
-                  <label style="color: red;" class="form-label" for="fname">Use username+phone's First 4 digit To avoid Error</label>
+                  <label style="color: red;" class="form-label" for="fname">Set Username (Use Name+phone's First 3-4 digit To avoid Error)</label>
               </div>
   
               <!-- Password input -->
