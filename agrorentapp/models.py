@@ -16,6 +16,7 @@ class addUser(models.Model):
     # <---------users = User.objects.all().select_related('addUser')---------------> 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(null=False,blank=False,unique=True,max_length=12)
+    adhar = models.CharField(null=True,max_length=12)
 
     def __str__(self):
         return self.user.username

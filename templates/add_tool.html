@@ -80,23 +80,34 @@
                             </h2>
                             <form>
                                 <div class="form-outline mb-2">
-                                    <input type="file"id="image" class="form-control form-control-lg" name="image"accept="image/png, image/jpeg , image/jpg">
+                                    <input  type="file"id="image" class="form-control form-control-lg" name="image"accept="image/png, image/jpeg , image/jpg">
                                     <label style="color: red;" class="form-label" for="image">Chose Tool Photo</label>
                                 </div>
                                 <div class="form-outline mb-2">
-                                    <input type="text" id="form3Example1cg" class="form-control form-control-lg" />
+                                    <input disabled type="text" value="{{request.user.first_name}} {{request.user.last_name}}" id="form3Example1cg" class="form-control form-control-lg" />
                                     <label class="form-label" for="form3Example1cg">Your Name</label>
                                 </div>
 
                                 <div class="form-outline mb-2">
-                                    <input type="email" id="email" class="form-control form-control-lg" />
+                                    <input disabled value="{{request.user.email}}" type="email" id="email" class="form-control form-control-lg" />
                                     <label class="form-label" for="email">Your Email</label>
                                 </div>
 
                                 <div class="form-outline mb-2">
-                                    <input type="email" id="phone" class="form-control form-control-lg" />
+                                    <input disabled value="{{request.user.adduser.phone}}" type="text" id="phone" class="form-control form-control-lg" />
                                     <label class="form-label" for="phone">Your Phone</label>
                                 </div>
+                            
+                                <div class="form-outline mb-2">
+                                    {% if request.user.adduser.adhar is null %}
+                                    <input  type="text" placeholder="Enter Valid Adher No" id="adher" class="form-control form-control-lg" />
+                                    {% else %}
+                                    <input style="color: rgb(57, 190, 30);"  disabled value="{{request.user.adduser.adhar}}" type="text" id="adher" class="form-control form-control-lg" />
+                                    {% endif %}
+                                  
+                                    <label class="form-label" for="adher">Adher No</label>
+                                </div>
+                                
 
                                 <div class="form-outline mb-4 round">
                                     <h3 style="color: green;">Add Tool Specification</h3>
@@ -112,10 +123,11 @@
                                     
                                     <input id="line2"  class="form-control form-control-sm mb-3" type="text" placeholder="Specification 2 , power , engine " aria-label=".form-control-sm example">
                                     
-                                    <div class="form-floating">
+                                    <div class="form-floating mb-3">
                                         <textarea class="form-control" placeholder="Leave a comment here" id="text_desc" style="height: 100px"></textarea>
                                         <label for="text_desc">Write Short Info of tool i.e handling , Uses etc.</label>
-                                      </div>
+                                    </div>
+                                    <input style="color: green; font-weight:bold;" id="rent_price"  class="form-control form-control-sm mb-3" type="number" placeholder="Booking Price i.e 800rs/day" aria-label=".form-control-sm example">
                                 </div>
 
                                 <div class="form-check d-flex justify-content-center mb-5">
@@ -128,7 +140,7 @@
                                 </div>
 
                                 <div class="d-flex justify-content-center">
-                                    <button type="button" id="submit" name="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                    <button type="submit" id="submit" name="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
                                         Submit
                                     </button>
                                 </div>
