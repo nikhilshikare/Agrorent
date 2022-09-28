@@ -55,11 +55,81 @@
         border-radius: 35px;
         padding: 1.1rem 1.1rem 1.1rem 1.1rem ;
     }
+    #chosed_image{
+        border-radius: 15px;
+        width: 90%;
+        height: 70%;
+    }
+    .chosed_image_class{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 
 </style>
 
 <!-- javascript tag started from here -->
-<script type="text/javascript"></script>
+<script type="text/javascript">
+    //< ------------------Scripts For Setting image Chosed--------->
+    var loadFile = function(event) {
+        var output = document.getElementById('chosed_image');
+        output.src = URL.createObjectURL(event.target.files[0]);
+        output.onload = function() {
+          URL.revokeObjectURL(output.src) // free memory
+        }
+      };
+
+    //  <!-- ----------------Scripts for Prevent Form From Reloading & Submittimg The SignIn Form------------------- -->
+    $(document).on('submit', '#post-form', function (e) {
+        document.getElementById("login_btn").disabled = true;
+        var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div>  Signing in..'
+        $('#login_btn').html(spinner);
+          e.preventDefault();
+          $.ajax({
+              type: 'POST',
+              url: '/add_tools',
+              data: {
+                  adhar: $('#adhar').val(),
+                  tool_type: $('#tool_type').val(),
+                  tool_desc: $('#tool_desc').val(),
+                  line1: $('#line1').val(),
+                  line2: $('#line2').val(),
+                  location: $('#location').val(),
+                  rent_price: $('#rent_price').val(),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+              },
+              success: function (data) {
+                if(data=="1"){
+                    $('#login_btn').text("Login");
+                    swal({
+                      title: 'Success!!',
+                      text: 'Login Succesfully..',
+                      imageUrl: '/static/home/success.jpg',
+                      imageWidth: 100,
+                      imageHeight: 90,
+                      imageAlt: 'Success',
+                  });
+                  speek_data('Login Succesfully...');
+                  window.location = "/";
+                }
+                else{
+                    $('#login_btn').html("Login");
+                    document.getElementById("login_btn").disabled = false;
+                    sweetAlert("Error!!", "<b><b style='color:red';>Invalid Crediantials</b>..!</b>", "error");
+                }
+              },
+              error: function (response) {
+                  alert('Something Went Wrong...');
+              }
+      
+          });
+      });
+      
+    
+    </script>
+
+
 
 <!-- html code startimng from here -->
 <img id="background-img" src="/static/Tools/addtool_back_img.jpg" alt="Agrorent" />
@@ -78,9 +148,13 @@
                                 <a id="head" href="/"><img id="home_logo" src="/static/home/home.jpg" alt="" width="45"
                                         height="40" class="d-inline-block align-text-top" /></a>
                             </h2>
-                            <form>
+                            <form id="post-form">
+                                {% csrf_token %}
+                                <div class="form-outline mb-2 chosed_image_class">
+                                    <img id="chosed_image" src="" alt="Chose Imgae"%>
+                                </div>
                                 <div class="form-outline mb-2">
-                                    <input  type="file"id="image" class="form-control form-control-lg" name="image"accept="image/png, image/jpeg , image/jpg">
+                                    <input onchange="loadFile(event)" type="file" id="image" value="" class="form-control form-control-lg" name="image"accept="image/png, image/jpeg , image/jpg">
                                     <label style="color: red;" class="form-label" for="image">Chose Tool Photo</label>
                                 </div>
                                 <div class="form-outline mb-2">
@@ -100,32 +174,32 @@
                             
                                 <div class="form-outline mb-2">
                                     {% if request.user.adduser.adhar is null %}
-                                    <input  type="text" placeholder="Enter Valid Adher No" id="adher" class="form-control form-control-lg" />
+                                    <input  type="text" placeholder="Enter Valid Adhar No" id="adhar" class="form-control form-control-lg" />
                                     {% else %}
-                                    <input style="color: rgb(57, 190, 30);"  disabled value="{{request.user.adduser.adhar}}" type="text" id="adher" class="form-control form-control-lg" />
+                                    <input  style="color: rgb(57, 190, 30);"  disabled value="{{request.user.adduser.adhar}}" type="text" id="adhar" class="form-control form-control-lg" />
                                     {% endif %}
                                   
-                                    <label class="form-label" for="adher">Adher No</label>
+                                    <label class="form-label" for="adher">Adhar No</label>
                                 </div>
                                 
 
                                 <div class="form-outline mb-4 round">
+                                    
                                     <h3 style="color: green;">Add Tool Specification</h3>
 
-                                    <select class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
-                                        <option selected>Select Tool From List menu</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <select id="tool_type" class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
+                                        <option selected>Select Tool type From List menu</option>
+                                        <option value="Tractor">Tractor</option>
+                                        <option value="Srayer">Sprayer</option>
+                                        <option value="Other">Other</option>
                                     </select>
-
+                                    <input id="location"  class="form-control form-control-sm mb-3" type="text" placeholder="Add location" aria-label=".form-control-sm example">
                                     <input id="line1"  class="form-control form-control-sm mb-3" type="text" placeholder="Specification 1 ,hp , wires" aria-label=".form-control-sm example">
-                                    
                                     <input id="line2"  class="form-control form-control-sm mb-3" type="text" placeholder="Specification 2 , power , engine " aria-label=".form-control-sm example">
                                     
                                     <div class="form-floating mb-3">
-                                        <textarea class="form-control" placeholder="Leave a comment here" id="text_desc" style="height: 100px"></textarea>
-                                        <label for="text_desc">Write Short Info of tool i.e handling , Uses etc.</label>
+                                        <textarea class="form-control" placeholder="Leave a comment here" id="tool_desc" style="height: 100px"></textarea>
+                                        <label for="tool_desc">Write Short Info of tool i.e handling , Uses etc.</label>
                                     </div>
                                     <input style="color: green; font-weight:bold;" id="rent_price"  class="form-control form-control-sm mb-3" type="number" placeholder="Booking Price i.e 800rs/day" aria-label=".form-control-sm example">
                                 </div>
