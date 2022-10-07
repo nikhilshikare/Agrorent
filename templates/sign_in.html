@@ -39,16 +39,9 @@ $(document).on('submit', '#post-form', function (e) {
           success: function (data) {
             if(data=="1"){
                 $('#login_btn').text("Login");
-                swal({
-                  title: 'Success!!',
-                  text: 'Login Succesfully..',
-                  imageUrl: '/static/home/success.jpg',
-                  imageWidth: 100,
-                  imageHeight: 90,
-                  imageAlt: 'Success',
-              });
-              speek_data('Login Succesfully...');
-              window.location = "/";
+                swal('Success!!','<b>Login Succesfully..</b>','success');
+                speek_data('Login Succesfully...');
+                my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/";},1400);
             }
             else{
                 $('#login_btn').html("Login");

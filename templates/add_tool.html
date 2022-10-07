@@ -1,5 +1,7 @@
 {% extends 'base.html' %} {% block title %}Home AgroRent {% endblock title %}
-{%block body %}
+{% block body %}
+{% load crispy_forms_tags %}
+
 
 <!-- Style startted from here -->
 <style>
@@ -65,13 +67,22 @@
         justify-content: center;
         align-items: center;
     }
+    #tool_desc{
+        height: 100px;
+    }
+    #rent_price{
+       color: green; 
+       font-weight:bold;
+    }
 
 
 </style>
-
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
 <!-- javascript tag started from here -->
 <script type="text/javascript">
-    //< ------------------Scripts For Setting image Chosed--------->
+ 
+    //< ---------Scripts For Setting image / Privew  Chosed Image------->
     var loadFile = function(event) {
         var output = document.getElementById('chosed_image');
         output.src = URL.createObjectURL(event.target.files[0]);
@@ -79,52 +90,118 @@
           URL.revokeObjectURL(output.src) // free memory
         }
       };
+//< ------------------Scripts For setting data To Tool Type--------->
+        // const tool_photo = document.getElementById('image');
+        // const csrf = document.getElementsByName('csrfmiddlewaretoken');
+        // const adhar = document.getElementById('adhar');
+        // const tool_type = document.getElementById('tool_type');
+        // const tool_info = document.getElementById('tool_desc');
+        // const line1 = document.getElementById('line1');
+        // const line2 = document.getElementById('line2');
+        // const location = document.getElementById('location');
+        // const rent_price = document.getElementById('rent_price');
+        // const form = document.getElementById('post-form');
+        // const url = "";
+
+        // tool_photo.addEventListener('change',()=>{
+        //     const tool_photo = tool_photo.files[0];
+        //     const url = URL.createObjectURL(tool_photo);
+        // })
+
+        // form.addEventListener('submit', e=>{
+        //     e.preventDefault();
+        //     const fd = new FormData();
+        //     fd.append('csrfmiddlewaretoken' , csrf[0].value);
+        //     fd.append('adhar' , adhar.value);
+        //     fd.append('tool_type' , tool_type.value);
+        //     fd.append('tool_info' , tool_info.value);
+        //     fd.append('line1' , line1.value);
+        //     fd.append('line2' , line2.value);
+        //     fd.append('location' , location.value);
+        //     fd.append('rent_price' , rent_price.value);
+        //     fd.append('tool_photo' , tool_photo.files[0]);
+
+        //     $.ajax({
+        //         type: 'POST',
+        //         url: '/add_tools/',
+        //         enctype : 'multipart/form-data',
+        //         data: fd,
+        //         headers: {
+        //             'X-Requested-With': 'XMLHttpRequest',
+        //             'HTTP_X_REQUESTED_WITH':'XMLHttpRequest'
+        //         },
+        //         success: function(response){
+        //             console.log(response);
+        //         },
+        //         error: function(error){
+        //             console.log(error);
+        //         },
+        //         cache: false,
+        //         contentType: false,
+        //         processData: false,
+        //     })
+
+        // })
+
+
+
 
     //  <!-- ----------------Scripts for Prevent Form From Reloading & Submittimg The SignIn Form------------------- -->
-    $(document).on('submit', '#post-form', function (e) {
-        document.getElementById("login_btn").disabled = true;
-        var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div>  Signing in..'
-        $('#login_btn').html(spinner);
-          e.preventDefault();
-          $.ajax({
-              type: 'POST',
-              url: '/add_tools',
-              data: {
-                  adhar: $('#adhar').val(),
-                  tool_type: $('#tool_type').val(),
-                  tool_desc: $('#tool_desc').val(),
-                  line1: $('#line1').val(),
-                  line2: $('#line2').val(),
-                  location: $('#location').val(),
-                  rent_price: $('#rent_price').val(),
-                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-              },
-              success: function (data) {
-                if(data=="1"){
-                    $('#login_btn').text("Login");
-                    swal({
-                      title: 'Success!!',
-                      text: 'Login Succesfully..',
-                      imageUrl: '/static/home/success.jpg',
-                      imageWidth: 100,
-                      imageHeight: 90,
-                      imageAlt: 'Success',
-                  });
-                  speek_data('Login Succesfully...');
-                  window.location = "/";
-                }
-                else{
-                    $('#login_btn').html("Login");
-                    document.getElementById("login_btn").disabled = false;
-                    sweetAlert("Error!!", "<b><b style='color:red';>Invalid Crediantials</b>..!</b>", "error");
-                }
-              },
-              error: function (response) {
-                  alert('Something Went Wrong...');
-              }
-      
-          });
-      });
+
+    // $(document).on('submit', '#post-form', function (e) {
+    //     const tool_photo = document.getElementById('image');
+    //     const csrf = document.getElementByName('csrfmiddlewaretoken');
+    //     document.getElementById("submit").disabled = true;
+    //     var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Saving...</span></div>  Saving Info..'
+    //     $('#submit').html(spinner);
+    //       e.preventDefault();
+    //       $.ajax({
+    //           type: 'POST',
+    //           url: '/add_tools/',
+    //           enctype:"multipart/form-data",
+    //           headers: {
+    //                 'X-Requested-With': 'XMLHttpRequest',
+    //                 'HTTP_X_REQUESTED_WITH':'XMLHttpRequest'
+    //             },
+    //           data: {
+    //             csrfmiddlewaretoken: csrf[0].val(),
+    //             tool_photo:tool_photo.files[0],
+    //             adhar: $('#adhar').val(),
+    //             tool_type: $('#tool_type').val(),
+    //             tool_info: $('#tool_desc').val(),
+    //             line1: $('#line1').val(),
+    //             line2: $('#line2').val(),
+    //             location: $('#location').val(),
+    //             rent_price: $('#rent_price').val(),
+    //           },
+    //           success: function (data) {
+    //             alert(data);
+    //             if(data=="1"){
+    //                 $('#submit').text("Submit");
+                {% if status == "1" %}
+                swal('Success!!','<b>Tool Added Succesfully..</b>','success');
+                speek_data('Tool Added Succesfully...');
+                my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},1400);     
+                {% endif %}
+             
+    //             }
+    //             else{
+    //                 $('#submit').html("Submit");
+    //                 document.getElementById("submit").disabled = false;
+                    {% if status == "0" %}
+                    sweetAlert("Error!!", "<b><b style='color:red';>Failed To Add Tool.. <br>Something went Wrong</b>..!</b>", "error");
+                    {% endif %}
+                
+    //             }
+    //           },
+    //           error: function (response) {
+    //               alert('Something Went Wrong...');
+    //           },
+    //           cache : false,
+    //           contentType : false,
+    //           processData : false
+    //       });
+    //   });
       
     
     </script>
@@ -148,13 +225,15 @@
                                 <a id="head" href="/"><img id="home_logo" src="/static/home/home.jpg" alt="" width="45"
                                         height="40" class="d-inline-block align-text-top" /></a>
                             </h2>
-                            <form id="post-form">
-                                {% csrf_token %}
+                            <form id="post-form" method="POST" action="/add_tools" enctype="multipart/form-data">
+                               {% csrf_token %}
+                                
+                               
                                 <div class="form-outline mb-2 chosed_image_class">
-                                    <img id="chosed_image" src="" alt="Chose Imgae"%>
+                                    <img id="chosed_image" src="" alt="Chose Imgae">
                                 </div>
                                 <div class="form-outline mb-2">
-                                    <input onchange="loadFile(event)" type="file" id="image" value="" class="form-control form-control-lg" name="image"accept="image/png, image/jpeg , image/jpg">
+                                    {{form.tool_photo}}
                                     <label style="color: red;" class="form-label" for="image">Chose Tool Photo</label>
                                 </div>
                                 <div class="form-outline mb-2">
@@ -174,9 +253,9 @@
                             
                                 <div class="form-outline mb-2">
                                     {% if request.user.adduser.adhar is null %}
-                                    <input  type="text" placeholder="Enter Valid Adhar No" id="adhar" class="form-control form-control-lg" />
+                                    <input required  type="number" placeholder="Enter Valid Adhar No" id="adhar" class="form-control form-control-lg" />
                                     {% else %}
-                                    <input  style="color: rgb(57, 190, 30);"  disabled value="{{request.user.adduser.adhar}}" type="text" id="adhar" class="form-control form-control-lg" />
+                                    <input  style="color: rgb(57, 190, 30);"  disabled value="{{request.user.adduser.adhar}}" type="number" id="adhar" class="form-control form-control-lg" />
                                     {% endif %}
                                   
                                     <label class="form-label" for="adher">Adhar No</label>
@@ -187,21 +266,16 @@
                                     
                                     <h3 style="color: green;">Add Tool Specification</h3>
 
-                                    <select id="tool_type" class="form-select form-select-sm mb-3" aria-label=".form-select-sm example">
-                                        <option selected>Select Tool type From List menu</option>
-                                        <option value="Tractor">Tractor</option>
-                                        <option value="Srayer">Sprayer</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <input id="location"  class="form-control form-control-sm mb-3" type="text" placeholder="Add location" aria-label=".form-control-sm example">
-                                    <input id="line1"  class="form-control form-control-sm mb-3" type="text" placeholder="Specification 1 ,hp , wires" aria-label=".form-control-sm example">
-                                    <input id="line2"  class="form-control form-control-sm mb-3" type="text" placeholder="Specification 2 , power , engine " aria-label=".form-control-sm example">
-                                    
+                                    {{form.tool_type}}
+                                    <!-- <input id="tool_type"  class="form-control form-control-sm mb-3" type="text"disabled placeholder="Selected Tool" aria-label=".form-control-sm example"> -->
+                                    {{form.location}}
+                                    {{form.tool_spec_1}}
+                                    {{form.tool_spec_2}}
                                     <div class="form-floating mb-3">
-                                        <textarea class="form-control" placeholder="Leave a comment here" id="tool_desc" style="height: 100px"></textarea>
+                                    {{form.tool_info}}
                                         <label for="tool_desc">Write Short Info of tool i.e handling , Uses etc.</label>
                                     </div>
-                                    <input style="color: green; font-weight:bold;" id="rent_price"  class="form-control form-control-sm mb-3" type="number" placeholder="Booking Price i.e 800rs/day" aria-label=".form-control-sm example">
+                                    {{form.rent_price}}
                                 </div>
 
                                 <div class="form-check d-flex justify-content-center mb-5">

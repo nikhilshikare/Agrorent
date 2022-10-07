@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path,include
 from agrorentapp import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('',views.home,name='home'),
@@ -15,9 +17,9 @@ urlpatterns = [
 
     #<--------- Class Tools releted path / urls start here ------->
 
-    path('add_tools',views.Tools.add_tool,name='add_tools'),
+    path('add_tools',views.Tools.add_tools,name='add_tools'),
     path('view_tools',views.Tools.view_tools,name='view_tools'),
     path('update_tool',views.Tools.update_tool,name='update_tool'),
 
     #<--------- Class Tools releted path / urls ends here ------->
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)#To store The Images and Media Files

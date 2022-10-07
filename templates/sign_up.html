@@ -12,8 +12,11 @@
 #otp{
   display: none;
 }
-#send_otp,#verify{
+#send_otp{
   visibility: visible;
+}
+#verify{
+  visibility: hidden;
 }
 
 </style>
@@ -22,7 +25,6 @@
 <!-- --------------------------------------------JavaScript Code Body Start From Here----------------------------- -->
 <script type="text/javascript">
   var otp=000;
-
  //  <!-- ----------------scripts for Sending Otp And Checking It------------------- -->  
  $(document).ready(function() { 
     $(document).on('click','#send_otp', function (e) {
@@ -45,16 +47,10 @@
               if(data !="-1" && data!="0" && data!="1"&& data!="2")
               {   
                     document.getElementById("otp").style.display="block";
-                      swal({
-                        title: 'Otp Send!!',
-                        text: 'Otp Sended Succesfully.',
-                        imageUrl: '/static/home/success.jpg',
-                        imageWidth: 100,
-                        imageHeight: 90,
-                        imageAlt: 'Success',
-                    }) 
+                    swal('Otp Send.!!','<b>Otp Sended Succesfully..</b>','success');
                     otp = data;
                     document.getElementById("verify").disabled = false;
+                    document.getElementById("verify").style.visibility="visible";
                     speek_data('Otp Sended Succesfully.');
                 
                     // <!-------------------- Timer For The Enable back The Send Otp Button------------------------ -->
@@ -81,7 +77,7 @@
                 sweetAlert("Error!!", "<b><b style='color:red';>Username Alredy Exist</b>..!</b>", "error");
               }
               else if(data=="1"){
-                sweetAlert("Error!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "error");
+                sweetAlert("Alert!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "warning");
               }
               else if (data=="2"){// indicate 2 for email exist in database
                 sweetAlert("Error!!", "<b><b style='color:red';>Email Alredy Exist</b>..!</b>", "error");
@@ -110,14 +106,7 @@
 
       if (otp == user_otp){
         document.getElementById("sign_up").style.visibility="visible";
-        swal({
-          title: 'Verfied Succesfully!!',
-          text: 'Email Verfied Succesfully.',
-          imageUrl: '/static/home/success.jpg',
-          imageWidth: 100,
-          imageHeight: 90,
-          imageAlt: 'Success',
-      });
+        swal('Verfied Succesfully!!!','<b>Email Verfied Succesfully.</b>','success');
       document.getElementById("send_otp").style.visibility="hidden";
       document.getElementById("verify").style.visibility="hidden";
       document.getElementById("otp").style.display="none";
@@ -152,16 +141,9 @@ $(document).on('submit', '#post-form', function (e) {
           if(data=="3"){
               $('#sign_up').text("Sign Up");
               document.getElementById("sign_up").disabled = false;
-              swal({
-                title: 'Success!!',
-                text: 'Registerd Succesfully..',
-                imageUrl: '/static/home/success.jpg',
-                imageWidth: 100,
-                imageHeight: 90,
-                imageAlt: 'Success',
-            });
+              swal('Success!!','<b>Registerd Succesfully..</b>','success');
             speek_data('Sign-up Info Saved...');
-            window.location = "/sign_in";
+            my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/sign_in";},1480);
           }
           else if(data=="0"){
             sweetAlert("Error!!", "<b><b style='color:red';>Username Alredy Exist</b>..!</b>", "error");
@@ -169,7 +151,7 @@ $(document).on('submit', '#post-form', function (e) {
             document.getElementById("sign_up").disabled = false;
           }
           else if(data=="1"){
-              sweetAlert("Error!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "error");
+            sweetAlert("Alert!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "warning");
               $('#sign_up').text("Sign Up");
               document.getElementById("sign_up").disabled = false;
           }

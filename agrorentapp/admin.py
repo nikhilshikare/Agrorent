@@ -1,5 +1,5 @@
 from django.contrib import admin
-from agrorentapp.models import addUser
+from agrorentapp.models import addUser,Tool,Booking,Request
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 
@@ -28,3 +28,6 @@ admin.site.register(User,CustomizedUserAdmin)
 # Register your models here.
 
 admin.site.register(addUser)
+admin.site.register(Tool)
+admin.site.register(Booking)
+admin.site.register(Request)

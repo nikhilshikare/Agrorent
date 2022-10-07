@@ -1,0 +1,4 @@
+1 ] install shedulars in python for auto deleting of msg--> pip install shedulars
+2 ] install pillow fror image handeling in python ---> pip install Pillow 
+3 ] install Django crispy form For Changing the Look And Baheviour ---> pip install django-crispy-forms
+    and after Adding add in Installed Apps and CRISPY_TEMPLATE_PACK = 'bootstrap5' to Settings

@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import logout,authenticate,login
 from django.shortcuts import render , redirect
-from django.http import HttpResponse
-from agrorentapp.models import  addUser 
+from django.http import HttpResponse , JsonResponse
+from agrorentapp.models import addUser,Booking,Request , Tool
 from django.core.mail import send_mail
+from agrorentapp.forms import ToolForm
 import random
 
 
@@ -17,7 +18,7 @@ import random
 def home(request):
     return render(request,"home.html")
 
-# <------------------Global Method Send Email Function Start here ------------------------------>
+# <------------------Global Method Send Email && 6 digit random Generate Function Start here ------------------------------>
 def send_email(sub,message,reciver_email):
     try:
         send_mail(
@@ -31,15 +32,57 @@ def send_email(sub,message,reciver_email):
     except:
         return 0
 
+def random_6_digit():
+    return random.randrange(100000,1000000)
+
+
 # <------------------Add/show Agro-Tools class  start from here------------------------------>
 
 class Tools:
          # <------------------Add Tool function is start here------------------------------>
-    def add_tool(request):
+    def add_tools(request):
+        #<----Internel function To Check Redundency of Tool ID In database START-->
+        def genrate_tool_id():
+            tool_id = request.user.adduser.phone+str(random_6_digit())
+            if Tool.objects.filter(tool_id=tool_id).exists():
+                genrate_tool_id()
+            else:
+                return tool_id
+        #<----Internel function To Check Redundency of Tool ID In database END-->
         if request.user.is_authenticated:
-            return render(request,"add_tool.html")
+            #random_6_digit()
+            user = request.user
+            form = ToolForm()
+            if  request.method =='POST':
+                form = ToolForm(request.POST,request.FILES)
+                if form.is_valid():
+                    obj = form.save(commit=False)
+                    obj.tool_id = genrate_tool_id()
+                    obj.username = request.user.username
+                    obj.save()
+
+                    context={
+                    'form':form,
+                    'status':"1",
+                    }
+                   
+                    return render(request,"add_tool.html",context) #return context= 1 To indicate all OK
+                else:
+                    context={
+                        'form':form,
+                        'status':"0",
+                    }
+                    return render(request,"add_tool.html",context)
+                    return HttpResponse('0') #return context =0 To indicate Something is Wrong
+            else:
+                context={
+                        'form':form,
+                        'status':"-1",
+                    }
+                return render(request,"add_tool.html",context)
         else:
             return redirect("/sign_in")
+
          # <------------------View Tool function is start here------------------------------>
     def view_tools(request):
         return HttpResponse("hii view tools")

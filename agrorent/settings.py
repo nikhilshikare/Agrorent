@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    
+    'crispy_forms',
     'agrorentapp',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -114,7 +116,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+# crispy :- Added Menually Not Preadded
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 #Note :- Added Menually Not From Preadded
 #EMAIL- SMTP FROM GMAIL
@@ -138,3 +141,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
