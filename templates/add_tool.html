@@ -1,4 +1,6 @@
-{% extends 'base.html' %} {% block title %}Home AgroRent {% endblock title %}
+{% extends 'base.html' %}
+
+{% block title %}Home AgroRent {% endblock title %}
 {% block body %}
 {% load crispy_forms_tags %}
 
@@ -80,74 +82,26 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
 <!-- javascript tag started from here -->
-<script type="text/javascript">
- 
+<script>
     //< ---------Scripts For Setting image / Privew  Chosed Image------->
     var loadFile = function(event) {
-        var output = document.getElementById('chosed_image');
-        output.src = URL.createObjectURL(event.target.files[0]);
-        output.onload = function() {
-          URL.revokeObjectURL(output.src) // free memory
+    var output = document.getElementById('chosed_image');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+    URL.revokeObjectURL(output.src) // free memory
         }
-      };
-//< ------------------Scripts For setting data To Tool Type--------->
-        // const tool_photo = document.getElementById('image');
-        // const csrf = document.getElementsByName('csrfmiddlewaretoken');
-        // const adhar = document.getElementById('adhar');
-        // const tool_type = document.getElementById('tool_type');
-        // const tool_info = document.getElementById('tool_desc');
-        // const line1 = document.getElementById('line1');
-        // const line2 = document.getElementById('line2');
-        // const location = document.getElementById('location');
-        // const rent_price = document.getElementById('rent_price');
-        // const form = document.getElementById('post-form');
-        // const url = "";
-
-        // tool_photo.addEventListener('change',()=>{
-        //     const tool_photo = tool_photo.files[0];
-        //     const url = URL.createObjectURL(tool_photo);
-        // })
-
-        // form.addEventListener('submit', e=>{
-        //     e.preventDefault();
-        //     const fd = new FormData();
-        //     fd.append('csrfmiddlewaretoken' , csrf[0].value);
-        //     fd.append('adhar' , adhar.value);
-        //     fd.append('tool_type' , tool_type.value);
-        //     fd.append('tool_info' , tool_info.value);
-        //     fd.append('line1' , line1.value);
-        //     fd.append('line2' , line2.value);
-        //     fd.append('location' , location.value);
-        //     fd.append('rent_price' , rent_price.value);
-        //     fd.append('tool_photo' , tool_photo.files[0]);
-
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: '/add_tools/',
-        //         enctype : 'multipart/form-data',
-        //         data: fd,
-        //         headers: {
-        //             'X-Requested-With': 'XMLHttpRequest',
-        //             'HTTP_X_REQUESTED_WITH':'XMLHttpRequest'
-        //         },
-        //         success: function(response){
-        //             console.log(response);
-        //         },
-        //         error: function(error){
-        //             console.log(error);
-        //         },
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-        //     })
-
-        // })
-
-
-
-
+};
+</script>
+<script type="text/javascript">
+      {% if status == "1" %}
+      swal('Success!!','<b>Tool Added Succesfully..</b>','success');
+      speek_data('Tool Added Succesfully...');
+      my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},1400);     
+      {% endif %}  
+      {% if status == "0" %}
+      sweetAlert("Error!!", "<b><b style='color:red';>Failed To Add Tool.. <br>Something went Wrong</b>..!</b>", "error");
+      {% endif %}
     //  <!-- ----------------Scripts for Prevent Form From Reloading & Submittimg The SignIn Form------------------- -->
-
     // $(document).on('submit', '#post-form', function (e) {
     //     const tool_photo = document.getElementById('image');
     //     const csrf = document.getElementByName('csrfmiddlewaretoken');
@@ -157,12 +111,8 @@
     //       e.preventDefault();
     //       $.ajax({
     //           type: 'POST',
-    //           url: '/add_tools/',
+    //           url: '/add_tools_data',
     //           enctype:"multipart/form-data",
-    //           headers: {
-    //                 'X-Requested-With': 'XMLHttpRequest',
-    //                 'HTTP_X_REQUESTED_WITH':'XMLHttpRequest'
-    //             },
     //           data: {
     //             csrfmiddlewaretoken: csrf[0].val(),
     //             tool_photo:tool_photo.files[0],
@@ -178,20 +128,16 @@
     //             alert(data);
     //             if(data=="1"){
     //                 $('#submit').text("Submit");
-                {% if status == "1" %}
-                swal('Success!!','<b>Tool Added Succesfully..</b>','success');
-                speek_data('Tool Added Succesfully...');
-                my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},1400);     
-                {% endif %}
-             
+              
+    //             swal('Success!!','<b>Tool Added Succesfully..</b>','success');
+    //             speek_data('Tool Added Succesfully...');
+    //             my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},5000);     
+
     //             }
     //             else{
     //                 $('#submit').html("Submit");
     //                 document.getElementById("submit").disabled = false;
-                    {% if status == "0" %}
-                    sweetAlert("Error!!", "<b><b style='color:red';>Failed To Add Tool.. <br>Something went Wrong</b>..!</b>", "error");
-                    {% endif %}
-                
+    //                 sweetAlert("Error!!", "<b><b style='color:red';>Failed To Add Tool.. <br>Something went Wrong</b>..!</b>", "error");
     //             }
     //           },
     //           error: function (response) {
@@ -209,26 +155,58 @@
 
 
 <!-- html code startimng from here -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-1">
+    <div class="container-fluid">
+      <a class="navbar-brand" >AgroRent Resources Manager </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #47d1b7;" class="nav-link" aria-current="page" href="/add_tools">Add Tool-Machinery</a>
+          </li>
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #49ce6e;" class="nav-link" href="/my_tools">My Tools</a>
+          </li>
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="#">DashBoard</a>
+          </li>
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="#">Request</a>
+          </li>
+          <li class="nav-item">
+            {% if request.user.is_anonymous %}
+            <a style="font-weight: bolder; color: #ffffff;" class="nav-link" href="/sign_in">Sign-In</a>
+            {% else %}
+            <a style="font-weight: bolder; color: #ce4949;" class="nav-link" href="/sign_out">Sign-Out</a>
+            {% endif %}
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </nav>
+
+
 <img id="background-img" src="/static/Tools/addtool_back_img.jpg" alt="Agrorent" />
 
-<section class="vh-100 bg-image" style="
-    background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');
-  ">
-    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+<section class="vh-100 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+
+    <div class="mask d-flex w-100 align-items-center h-100 gradient-custom-3">
         <div class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                     <div class="card" style="border-radius: 15px">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">
-                                Add Agro Tool
+                                Add Agro Tool / Machineey
                                 <a id="head" href="/"><img id="home_logo" src="/static/home/home.jpg" alt="" width="45"
                                         height="40" class="d-inline-block align-text-top" /></a>
                             </h2>
-                            <form id="post-form" method="POST" action="/add_tools" enctype="multipart/form-data">
+                            <form id="post-form" action='/add_tools'  enctype="multipart/form-data" method='POST'>
                                {% csrf_token %}
                                 
-                               
                                 <div class="form-outline mb-2 chosed_image_class">
                                     <img id="chosed_image" src="" alt="Chose Imgae">
                                 </div>

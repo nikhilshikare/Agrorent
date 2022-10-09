@@ -51,7 +51,6 @@ class Tools:
         #<----Internel function To Check Redundency of Tool ID In database END-->
         if request.user.is_authenticated:
             #random_6_digit()
-            user = request.user
             form = ToolForm()
             if  request.method =='POST':
                 form = ToolForm(request.POST,request.FILES)
@@ -72,8 +71,7 @@ class Tools:
                         'form':form,
                         'status':"0",
                     }
-                    return render(request,"add_tool.html",context)
-                    return HttpResponse('0') #return context =0 To indicate Something is Wrong
+                    return render(request,"add_tool.html",context)#return context =0 To indicate Something is Wrong
             else:
                 context={
                         'form':form,
@@ -83,12 +81,26 @@ class Tools:
         else:
             return redirect("/sign_in")
 
-         # <------------------View Tool function is start here------------------------------>
-    def view_tools(request):
-        return HttpResponse("hii view tools")
-         # <------------------Update toolis start here------------------------------>
+         # <------------------View Uploaded  Tool function is start here------------------------------>
+    def my_tools(request):
+        if request.user.is_authenticated:
+            tools_data_lst=[]
+            # tools_data = Tool.objects.values('tool_spec_1', 'tool_spec_2','tool_type','rent_price','tool_photo').filter(username=request.user)
+            tools_data= Tool.objects.all().filter(username=request.user)
+            print(tools_data)
+            for i in tools_data:
+                tools_data_lst.append(i)
+            context={
+                    "tools_data_lst":tools_data_lst,
+                    }   
+            return render(request,"my_tools.html",context=context)
+        else:
+            return redirect("/sign_in")
+
+         # <------------------Update toolis strt here------------------------------>
     def update_tool(request):
         return HttpResponse("hii update tools")
+
 
 
 # <------------------Autintication sign in sign up class start here------------------------------>

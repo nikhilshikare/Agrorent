@@ -6,7 +6,7 @@ class ToolForm(forms.ModelForm):
     class Meta:
         model = Tool
         fields = ('tool_photo' ,'tool_type', 'location','tool_spec_1','tool_spec_2','tool_info','rent_price')
-        types = [(day, day) for day in ['Tractor','Sprayer','Other']]
+        types = [(day, day) for day in ['Tractor','Sprayer','Cutter','Other']]
         widgets = {
             'tool_photo': forms.FileInput(attrs={'onchange':'loadFile(event)','class':'form-control form-control-lg','id':'image','alt':'Chose Image','value':'','name':'image', 'accept':'image/png, image/jpeg , image/jpg'}),
             'location' : forms.TextInput(attrs={'class':'form-control form-control-sm mb-3','required':'required','placeholder':'Add location','id':'location','aria-label':".form-control-sm example"}),

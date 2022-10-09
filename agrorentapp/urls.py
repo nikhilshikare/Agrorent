@@ -18,7 +18,7 @@ urlpatterns = [
     #<--------- Class Tools releted path / urls start here ------->
 
     path('add_tools',views.Tools.add_tools,name='add_tools'),
-    path('view_tools',views.Tools.view_tools,name='view_tools'),
+    path('my_tools',views.Tools.my_tools,name='my_tools'),
     path('update_tool',views.Tools.update_tool,name='update_tool'),
 
     #<--------- Class Tools releted path / urls ends here ------->
