@@ -15,6 +15,11 @@ urlpatterns = [
 
     #<--------- Authentication releted path / urls ends here ------->
 
+    #<--------- Adhar Upload releted path / urls start here ------->
+
+    path('upload_adhar',views.upload_adhar,name='upload_adhar'),
+
+    #<--------- Adhar Upload releted path / urls Ends here ------->
     #<--------- Class Tools releted path / urls start here ------->
 
     path('add_tools',views.Tools.add_tools,name='add_tools'),

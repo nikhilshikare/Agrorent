@@ -105,6 +105,7 @@
      var user_otp = document.getElementById("otp").value;
 
       if (otp == user_otp){
+        document.getElementById("sign_up").disabled = false;
         document.getElementById("sign_up").style.visibility="visible";
         swal('Verfied Succesfully!!!','<b>Email Verfied Succesfully.</b>','success');
       document.getElementById("send_otp").style.visibility="hidden";
@@ -264,6 +265,8 @@ $(document).on('submit', '#post-form', function (e) {
   </section>
   <!-- Section: Design Block -->
 </div>
-
+<script>
+  document.getElementById("sign_up").disabled = true;
+</script>
 
 {% endblock body %}

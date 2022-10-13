@@ -18,6 +18,18 @@ import random
 def home(request):
     return render(request,"home.html")
 
+def upload_adhar(request):
+    if request.method =='POST':
+        adhar = request.POST.get('adhar')
+        if addUser.objects.filter(adhar=adhar).exists():
+            return HttpResponse("0")#same Adhar No Exist return 0
+        else:
+           
+            addUser.objects.filter(user=request.user).update(adhar=adhar)
+            return HttpResponse("1")#Return 1 For all
+    else:
+        return HttpResponse("-1")#for Unknown error
+
 # <------------------Global Method Send Email && 6 digit random Generate Function Start here ------------------------------>
 def send_email(sub,message,reciver_email):
     try:

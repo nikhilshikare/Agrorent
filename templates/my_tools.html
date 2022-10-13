@@ -2,7 +2,7 @@
 {% block title %}My Tools{% endblock title %}
 {% block body %}
 <style>
-    body{margin-top:20px;
+    body{margin-top:0px;
     background:#eee;
 }
 
@@ -150,7 +150,7 @@
 
 
 </style>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-1">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-0">
     <div class="container-fluid">
       <a class="navbar-brand" >AgroRent Resources Manager </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -177,9 +177,11 @@
             <a style="font-weight: bolder; color: #ce4949;" class="nav-link" href="/sign_out">Sign-Out</a>
             {% endif %}
           </li>
+          <li>
+            <a style="font-weight: bolder; color: white;" class="nav-link" href="/">Home</a>
+          </li>
         </ul>
-      </div>
-      
+      </div>  
     </div>
   </nav>
 

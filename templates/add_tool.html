@@ -89,65 +89,59 @@
     output.src = URL.createObjectURL(event.target.files[0]);
     output.onload = function() {
     URL.revokeObjectURL(output.src) // free memory
-        }
+        }   
 };
+
 </script>
 <script type="text/javascript">
       {% if status == "1" %}
       swal('Success!!','<b>Tool Added Succesfully..</b>','success');
       speek_data('Tool Added Succesfully...');
-      my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},1400);     
+      my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},1200);     
       {% endif %}  
       {% if status == "0" %}
       sweetAlert("Error!!", "<b><b style='color:red';>Failed To Add Tool.. <br>Something went Wrong</b>..!</b>", "error");
       {% endif %}
-    //  <!-- ----------------Scripts for Prevent Form From Reloading & Submittimg The SignIn Form------------------- -->
-    // $(document).on('submit', '#post-form', function (e) {
-    //     const tool_photo = document.getElementById('image');
-    //     const csrf = document.getElementByName('csrfmiddlewaretoken');
-    //     document.getElementById("submit").disabled = true;
-    //     var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Saving...</span></div>  Saving Info..'
-    //     $('#submit').html(spinner);
-    //       e.preventDefault();
-    //       $.ajax({
-    //           type: 'POST',
-    //           url: '/add_tools_data',
-    //           enctype:"multipart/form-data",
-    //           data: {
-    //             csrfmiddlewaretoken: csrf[0].val(),
-    //             tool_photo:tool_photo.files[0],
-    //             adhar: $('#adhar').val(),
-    //             tool_type: $('#tool_type').val(),
-    //             tool_info: $('#tool_desc').val(),
-    //             line1: $('#line1').val(),
-    //             line2: $('#line2').val(),
-    //             location: $('#location').val(),
-    //             rent_price: $('#rent_price').val(),
-    //           },
-    //           success: function (data) {
-    //             alert(data);
-    //             if(data=="1"){
-    //                 $('#submit').text("Submit");
-              
-    //             swal('Success!!','<b>Tool Added Succesfully..</b>','success');
-    //             speek_data('Tool Added Succesfully...');
-    //             my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},5000);     
 
-    //             }
-    //             else{
-    //                 $('#submit').html("Submit");
-    //                 document.getElementById("submit").disabled = false;
-    //                 sweetAlert("Error!!", "<b><b style='color:red';>Failed To Add Tool.. <br>Something went Wrong</b>..!</b>", "error");
-    //             }
-    //           },
-    //           error: function (response) {
-    //               alert('Something Went Wrong...');
-    //           },
-    //           cache : false,
-    //           contentType : false,
-    //           processData : false
-    //       });
-    //   });
+    //  <!-- ----------------Scripts for Uploading Adhar card if not There Form------------------- -->
+
+    $(document).on('click', '#adhar_btn', function (e) {
+        document.getElementById("adhar_btn").disabled = true;
+        var spinner = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading... </span></div> Saving info..'
+        $('#adhar_btn').html(spinner);
+          e.preventDefault();
+          $.ajax({
+              type: 'POST',
+              url: '/upload_adhar',
+              data: {
+                  adhar:$('#adhar').val(),
+                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+              },
+              success: function (data) {
+                if(data=="1"){
+                    $('#adhar_btn').text("Upload adhar");
+                    document.getElementById("adhar_btn").disabled = false;
+                    swal('Success!!','<b>Adhar  Uploaded Succesfully</b>','success');
+                    speek_data('Adhar Number Info Saved Succesfully...');
+                    my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/add_tools";},1000);
+                }
+                else if(data=="0"){
+                    sweetAlert("same Email!!", "<b><b style='color:red';>Same Adhar Number Exists</b>..!</b>", "error");
+                    $('#adhar_btn').text("Upload Adhar");
+                    document.getElementById("adhar_btn").disabled = false;
+                }
+                else{// indicate 0 something went Wrong
+                  sweetAlert("Error!!", "<b><b style='color:red';>Something Went Wrong</b>..!</b>", "error");
+                  $('#adhar_btn').text("Upload Adhar");
+                  document.getElementById("adhar_btn").disabled = false;
+                }
+              },
+              error: function (response) {
+                  alert('Something Went Wrong...');
+              }
+      
+          });
+      });
       
     
     </script>
@@ -155,7 +149,7 @@
 
 
 <!-- html code startimng from here -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-1">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-0">
     <div class="container-fluid">
       <a class="navbar-brand" >AgroRent Resources Manager </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -182,14 +176,14 @@
             <a style="font-weight: bolder; color: #ce4949;" class="nav-link" href="/sign_out">Sign-Out</a>
             {% endif %}
           </li>
+          <li>
+            <a style="font-weight: bolder; color: white;" class="nav-link" href="/">Home</a>
+          </li>
         </ul>
       </div>
-      
     </div>
   </nav>
 
-
-<img id="background-img" src="/static/Tools/addtool_back_img.jpg" alt="Agrorent" />
 
 <section class="vh-100 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
 
@@ -200,7 +194,7 @@
                     <div class="card" style="border-radius: 15px">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">
-                                Add Agro Tool / Machineey
+                                Add Agro Tool / Machinery
                                 <a id="head" href="/"><img id="home_logo" src="/static/home/home.jpg" alt="" width="45"
                                         height="40" class="d-inline-block align-text-top" /></a>
                             </h2>
@@ -231,12 +225,18 @@
                             
                                 <div class="form-outline mb-2">
                                     {% if request.user.adduser.adhar is null %}
-                                    <input required  type="number" placeholder="Enter Valid Adhar No" id="adhar" class="form-control form-control-lg" />
+                                    <form id="adhar-form">
+                                        {% csrf_token %}
+                                        <input required  type="number" pattern="[^' ']+" placeholder="Enter Valid Adhar No" id="adhar" class="form-control form-control-lg" />
+                                        <label class="form-label " for="adhar">Adhar No</label>
+                                        <button type="submit" id="adhar_btn" class="btn btn-warning my-3 mx-4">Upload Adhar</button>
+                                    </form>
                                     {% else %}
-                                    <input  style="color: rgb(57, 190, 30);"  disabled value="{{request.user.adduser.adhar}}" type="number" id="adhar" class="form-control form-control-lg" />
+                                    <input  style="color: rgb(57, 190, 30);"   disabled value="{{request.user.adduser.adhar}}" type="number" id="adhar" class="form-control form-control-lg" />
+                                    <label class="form-label" for="adhar">Adhar No</label>
                                     {% endif %}
                                   
-                                    <label class="form-label" for="adher">Adhar No</label>
+                                    
                                 </div>
                                 
 
@@ -255,11 +255,10 @@
                                     </div>
                                     {{form.rent_price}}
                                 </div>
-
+                               
                                 <div class="form-check d-flex justify-content-center mb-5">
-                                    <input class="form-check-input me-2" type="checkbox" value=""
-                                        id="form2Example3cg" />
-                                    <label class="form-check-label" for="form2Example3g">
+                                    <input class="form-check-input me-2"   id="check_box" onclick="setCheckValue()" type="checkbox" value="">
+                                    <label class="form-check-label" for="check_box">
                                         I agree all statements in
                                         <a href="#!" class="text-body"><u>Terms of service</u></a>
                                     </label>
@@ -278,5 +277,23 @@
         </div>
     </div>
 </section>
+
+
+<script>
+        
+    function setCheckValue(){
+
+    var submit = document.getElementById("submit");
+    var check_box_value=$("#check_box").is(":checked");
+
+    if (!check_box_value){
+        document.getElementById("submit").disabled = true;
+    }
+    if(check_box_value){
+        document.getElementById("submit").disabled = false;
+    }
+}
+setCheckValue();
+</script>
 
 {% endblock body %}

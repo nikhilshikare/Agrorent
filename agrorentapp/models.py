@@ -1,13 +1,12 @@
-from tkinter.filedialog import SaveAs
-from unicodedata import name
-from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.auth.models import User
-from django.dispatch import receiver
 from datetime import datetime
-from django.db.models.signals import post_save
+import os
+from uuid import uuid4
+from django.utils.deconstruct import deconstructible
 
 # Create your models here.
+
 
 #<------Model Named addUser to Extend the inbuild Django UserModel Starts here -------->
 class addUser(models.Model):
@@ -26,6 +25,29 @@ class addUser(models.Model):
 
 #<----------Model Named Tools to add tool Starts Here here ------------>
 
+#<***********image Renaming According to Id  Starts Here here ************>
+
+@deconstructible
+class PathRename(object):
+
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        # get filename
+        if instance.pk:
+            filename = '{}.{}'.format(instance.tool_id, ext)
+        else:
+            # set filename as random string
+            filename = '{}.{}'.format(uuid4().hex, ext)
+        # return the whole path to the file
+        return os.path.join(self.path, filename)
+
+path_and_rename = PathRename("images")
+
+#<***********image Renaming According to Id  Ends Here here ************>
+
 class Tool(models.Model):
     tool_id     = models.CharField(unique=True ,primary_key=True, null=False ,max_length=20)#'Phone + 6 digit random no'
     username    = models.CharField(unique=False ,max_length=50,blank=False)#ownerusername
@@ -35,10 +57,12 @@ class Tool(models.Model):
     rent_price  = models.CharField(max_length=9)
     tool_type = models.CharField(max_length=200,blank=True)
     location = models.CharField(max_length=200,blank=True)
-    tool_photo = models.ImageField(upload_to='images' )
-    
+    tool_photo = models.ImageField(upload_to=path_and_rename)
+
     def __str__(self):
         return self.tool_type
+
+        
 #<----------Model Named Tools to add tool Ends Here here ------------>
 #<----------Model Named Request to send And recive request Starts Here here ------------>
 
