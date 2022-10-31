@@ -1,9 +1,10 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 {% block title %}My Tools{% endblock title %}
 {% block body %}
 <style>
     body{margin-top:0px;
     background:#eee;
+    background-color: #53d39c;
 }
 
 /* ========================================================================
@@ -129,12 +130,45 @@
     display: flex;
     align-items: center;
 }
-   
-.image_class{
-    width: 350px;
-    height: 210px;
+.image_para_box{
+  border: 10px solid goldenrod;
+  margin: 1px 1px 1px 1px;
 }
 
+
+
+  @media screen  and (max-width: 420px) {
+    .image_class{
+          width: 250px;
+          height: 200px;
+      }
+   .image_para_box,.outer_data_div{
+        display: flex;
+        justify-content: center;
+    }
+    .small_data_div{
+        width: 100vw;
+        height: 100vh;
+   }
+}
+
+
+@media  screen and (min-width: 420px) {
+      .image_class{
+            width: 420px;
+            height: 16em;
+    }
+      
+    .outer_data_div{
+        display: flex;
+        justify-content: center;
+    }
+    .small_data_div{
+        width:none;
+        height: none;
+  }
+
+}
 @media  screen and (min-width: 800px) {
         /* styles for browsers larger than 960px; */
         .image_class{
@@ -142,11 +176,11 @@
         height: 370px;
     }
     .outer_data_div{
+
         display: flex;
         justify-content: center;
     }
 }
-
 
 
 </style>
@@ -168,7 +202,7 @@
             <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="#">DashBoard</a>
           </li>
           <li class="nav-item">
-            <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="#">Request</a>
+            <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/requests?status=2">Requests</a>
           </li>
           <li class="nav-item">
             {% if request.user.is_anonymous %}
@@ -186,34 +220,27 @@
   </nav>
 
 <div class="panel-body no-padding outer_data_div">
-    <div class="list-group no-margin list-message" >
-        {% if tools_data_lst %}
-             {% for i  in tools_data_lst %}
-                <a  href="#" class="list-group-item">
-                   
-                <p class="list-group-item-text">
+  {% if tools_data_lst %}
+  {% for i  in tools_data_lst %}
+    <div class="list-group no-margin list-message small_data_div" >
+                <a  href="/show_info?tool_id={{i.tool_id}}" class="list-group-item "> 
+                <p class="list-group-item-text image_para_box">
                     <img  src="{{i.tool_photo.url}}" class="rounded float-left image_class" alt="...">
                 </p>
                 <h3 class="list-group-item-heading" >{{i.tool_type}} </h3>
                 <p class="list-group-item-text">{{i.tool_spec_1}}</p>
                 <p class="list-group-item-text">{{i.tool_spec_2}}</p>
                 <p class="list-group-item-text">Rent Price :-{{i.rent_price}}</p>
-                <span class="label label-default pull-right circle">Owner :-{{request.user.first_name}}</span>
+                <p class="list-group-item-text">Location :- {{i.location}}</p>
+                <span class="label label-default pull-right circle">Owner :-{{request.user.first_name}} {{request.user.last_name}}</span>
                 <div class="clearfix"></div>
                 </a>
              {% endfor %}
         {% else %}
-        <h1>It looks Like You Don't Added Any Tools<br>Please Add In <b style='color:green;'>Upload/Add Tools Section</b></p>
-        {% endif %}
+        <p> <h1>It looks Like You Don't Added Any Tools<br>Please Add In <b style='color:green;'>Upload/Add Tools Section</b></p>  
     </div><!-- /.list-group -->
+    {% endif %}
 </div><!-- /.panel-body -->
-
-
-
-
-
-
-
 
 
 {% endblock body %}

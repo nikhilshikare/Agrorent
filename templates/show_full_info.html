@@ -1,0 +1,452 @@
+{% extends 'base2.html' %}
+{% block title %}Show Full Info{% endblock title %}
+{% block body %}
+<style>
+    body{margin-top:0px;
+    background:#eee;
+    background-color:#53d39c
+}
+
+/* ========================================================================
+ * MESSAGES
+ * ======================================================================== */
+.message form {
+  padding: 6px 15px;
+  background-color: #FAFAFA;
+  border-bottom: 1px solid #E6EBED;
+}
+.message form .has-icon .form-control-icon {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: 0;
+  width: 34px;
+  line-height: 33px;
+  text-align: center;
+  color: #777;
+}
+.message > a {
+  position: relative;
+}
+.message .indicator {
+  text-align: center;
+}
+.message .indicator .spinner {
+  left: 26%;
+  width: 200px;
+  font-size: 13px;
+  line-height: 17px;
+  color: #999;
+}
+
+.message-wrapper {
+  position: relative;
+  padding: 0px;
+  background-color: #ffffff;
+  margin: 0px;
+}
+.message-wrapper .message-sideleft {
+  vertical-align: top !important;
+}
+.message-wrapper .message-sideleft[class*="col-"] {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.message-wrapper .message-sideright {
+  background-color: #f8f8f8;
+}
+.message-wrapper .message-sideright[class*="col-"] {
+  padding: 30px;
+}
+.message-wrapper .message-sideright .panel {
+  border-top: 1px dotted #DDD;
+  padding-top: 20px;
+}
+.message-wrapper .message-sideright .panel:first-child {
+  border-top: none;
+  padding-top: 0px;
+}
+.message-wrapper .message-sideright .panel .panel-heading {
+  border-bottom: none;
+}
+.message-wrapper .panel {
+  background-color: transparent !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.message-wrapper .panel .panel-heading, .message-wrapper .panel .panel-body {
+  background-color: transparent !important;
+}
+.message-wrapper .media .media-body {
+  font-weight: 300;
+}
+.message-wrapper .media .media-heading {
+  margin-bottom: 0px;
+}
+.message-wrapper .media small {
+  color: #999999;
+  font-weight: 400;
+}
+
+.list-message .list-group-item {
+ font-size: larger;
+ font-weight: bold;
+  padding: 15px;
+  color: #040404 !important;
+  border-right: 3px solid #8CC152 !important;
+}
+.list-message .list-group-item.active {
+  background-color: #EEEEEE;
+  border-bottom: 1px solid #DDD !important;
+}
+.list-message .list-group-item.active p {
+  color: #999999 !important;
+}
+.list-message .list-group-item.active:hover, .list-message .list-group-item.active:focus, .list-message .list-group-item.active:active {
+  background-color: #EEEEEE;
+}
+.list-message .list-group-item small {
+  font-size: 12px;
+}
+.list-message .list-group-item .list-group-item-heading {
+    font-weight: bolder;
+  color: #0c0c0c !important;
+}
+.list-message .list-group-item .list-group-item-text {
+  margin-bottom: 10px;
+}
+.list-message .list-group-item:last-child {
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  border-bottom: 1px solid #DDD !important;
+}
+.avatar{
+    width:50px;
+    height:50px;
+}
+.photo_align_class{
+    display: flex;
+    align-items: center;
+}
+.image_para_box{
+  border: 10px solid goldenrod;
+  margin: 1px 1px 1px 1px;
+}
+
+  @media screen  and (max-width: 420px) {
+    .image_class{
+          width: 250px;
+          height: 200px;
+         
+      }
+   .image_para_box,.outer_data_div{
+        display: flex;
+        justify-content: center;
+    }
+    .small_data_div{
+        width: 100vw;
+        height: 100vh;
+   }
+}
+
+
+@media  screen and (min-width: 420px) {
+      .image_class{
+            width: 420px;
+            height: 16em;
+    }
+      
+    .outer_data_div{
+        display: flex;
+        justify-content: center;
+    }
+    .small_data_div{
+        width:none;
+        height: none;
+  }
+
+}
+@media  screen and (min-width: 800px) {
+        /* styles for browsers larger than 960px; */
+        .image_class{
+        width: 600px;
+        height: 370px;
+    }
+    .outer_data_div{
+        display: flex;
+        justify-content: center;
+    }
+}
+
+#btn_div{
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+#request_form{
+  border:2px solid #ce4949;
+  border-radius: 15px;
+  padding: 2px 20px 20px 20px;
+}
+
+
+</style>
+<!-- *************************javascript Start From here*************** -->
+<script type="text/javascript">
+
+  //  <!-- ----------------scripts for Deleting tool Form------------------- -->
+  $(document).on('submit', '#delete_tool_form', function (e) {
+      document.getElementById("delete_tool").disabled = true;
+      var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div> Please Wait..'
+      $('#delete_tool').html(spinner);
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '/delete_tool',
+            data: {
+              tool_id: $('#tool_id').val(),
+              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (data) {
+              if(data=="1"){
+                  $('#delete_tool').text("Delete Tool");
+                  swal('Success!!','<b>Tool Deleted Succesfully..</b>','success');
+                  speek_data('Tool Deleted Succesfully..');
+                  my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/my_tools";},1400);
+              }
+              else{
+                  $('#delete_tool').html("Delete Tool");
+                  document.getElementById("delete_tool").disabled = false;
+                  sweetAlert("Error!!", "<b><b style='color:red';>Something Went wrong..</b>Failed To delete!</b>", "error");
+              }
+            },
+            error: function (response) {
+                alert('Something Went Wrong...');
+            }
+    
+        });
+    });
+
+     //  <!-- ----------------scripts for Booking tool Form------------------- -->
+  $(document).on('submit', '#book_form', function (e) {
+    document.getElementById("book_tool_btn").disabled = true;
+    var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div> Please Wait..'
+    $('#book_tool_btn').html(spinner);
+      e.preventDefault();
+      $.ajax({
+          type: 'POST',
+          url: '/book_tool',
+          data: {
+            tool_id: $('#tool_id').val(),
+            tool_owner: $('#tool_owner').val(),
+            request_id: $('#request_id').val(),
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function (data) {
+            if(data=="1"){
+                $('#book_tool_btn').text("Book Tool");
+                swal('Success!!','<b>Tool Booking Conformed Succesfully..</b>','success');
+                speek_data('Tool Booking Done');
+                my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/my_tools";},1400);
+            }
+            else{
+                $('#book_tool_btn').html("Book Tooll");
+                document.getElementById("book_tool_btn").disabled = false;
+                sweetAlert("Error!!", "<b><b style='color:red';>Failed To Book </b>Seems like Tool Already Booked By Some One Others!</b>", "error");
+            }
+          },
+          error: function (response) {
+              alert('Something Went Wrong...');
+          }
+  
+      });
+  });
+
+    //  <!-- ----------------scripts for Making Request To Owner For Tool Without Reloading The  Form------------------- -->
+  $(document).on('submit', '#request_form', function (e) {
+              required_from=$('#required_from').val();
+              required_till=$('#required_till').val();
+              if (required_from<required_till)
+               {
+                          document.getElementById("request_tool").disabled = true;
+                          var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div> Making Request..'
+                          $('#request_tool').html(spinner);
+                            e.preventDefault();
+                            $.ajax({
+                                type: 'POST',
+                                url: '/request_tool',
+                                data: {
+                                  tool_id: $('#tool_id').val(),
+                                  tool_owner: $('#tool_owner').val(),
+                                  required_from:$('#required_from').val(),
+                                  required_till:$('#required_till').val(),
+                                  csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                                },
+                                success: function (data) {
+                                  if(data=="1"){
+                                      $('#request_tool').text("Request Tool");
+                                      swal('Request Sended!!','<b style="color:green;">Request For Tool Sended..</b>','success');
+                                      speek_data('Tool Request Sended Succesfully..');
+                                     // <----------------------My timeout 1 for request send----->
+                                        my_timeout = setTimeout(()=>{ clearTimeout(my_timeout); 
+                                        swal('View Status','<b style="color:#0b5394;">You Can View Status In Request Tab.</b>','info');  
+                                        document.getElementById("request_tool").disabled = true; },1400);
+                                    // <----------------------My timeout 2 for redirect them in request page----->
+
+                                      redirect_timeout = setTimeout(()=>{ clearTimeout(redirect_timeout);  window.location =  "/requests?status=2";},3000);   
+                                  }
+                                  else{
+                                      $('#request_tool').html("Request Tool");
+                                      document.getElementById("request_tool").disabled = false;
+                                      sweetAlert("Error!!", "<b><b style='color:red';>Something Went wrong..</b>Failed To Make Request!</b>", "error");
+                                  }
+                                },
+                                error: function (response) {
+                                    alert('Something Went Wrong...');
+                                }
+                        
+                            });
+              } else {
+                alert("Please Fill Valid Date")
+              }
+    });
+    
+  </script>
+  
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-0">
+    <div class="container-fluid">
+      <a class="navbar-brand" >AgroRent Show Full Info </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #49ce6e;" class="nav-link" href="/my_tools">My Tools</a>
+          </li>
+          <li class="nav-item">
+            {% if request.user.is_anonymous %}
+            <a style="font-weight: bolder; color: #ffffff;" class="nav-link" href="/sign_in">Sign-In</a>
+            {% else %}
+            <a style="font-weight: bolder; color: #ce4949;" class="nav-link" href="/sign_out">Sign-Out</a>
+            {% endif %}
+          </li>
+          <li>
+            <a style="font-weight: bolder; color: white;" class="nav-link" href="/">Home</a>
+          </li>
+        </ul>
+      </div>  
+    </div>
+  </nav>
+
+<div class="panel-body no-padding outer_data_div">
+    <div class="list-group no-margin list-message small_data_div" >
+        {% if tools_data_lst %}
+             {% for i  in tools_data_lst %}
+               <a class="list-group-item ">
+                   
+                <p class="list-group-item-text image_para_box">
+                    <img  src="{{i.tool_photo.url}}" class="rounded float-left image_class" alt="...">
+                </p>
+                <h3 class="list-group-item-heading" >{{i.tool_type}} </h3>
+                <p class="list-group-item-text">Tool Id --> {{i.tool_id}}</p>
+                <p class="list-group-item-text">{{i.tool_spec_1}}</p>
+                <p class="list-group-item-text">{{i.tool_spec_2}}</p>
+                <p class="list-group-item-text">Rent Price :- {{i.rent_price}}</p>
+                <p class="list-group-item-text">Location :- {{i.location}}</p>
+                <span class="label label-default pull-right circle">Owner Username :-{{i.username}}</span>
+                <div class="clearfix"></div>
+            </a>
+          
+                    {% if request.user.username == i.username %}
+                        <div class="mb-3" style="background-color: white;">
+                          <div id="btn_div" class="my-1 mb-1">
+                                  <form id="delete_tool_form">
+                                      {% csrf_token %}
+                                      <input type="hidden" name="tool_id" id="tool_id" value={{i.tool_id}}>
+                                    <button id="delete_tool" type="submit" class="btn btn-danger mx-2">Delete</button>
+                                  </form>
+                          </div>
+
+                          <hr style="height:5px">
+                          <div class="my-1 mb-1 px-1">
+                            <p style="border: 3px dotted #ce4949; ">Rented To --> <b>Rented To Name</b><br>
+                              Booking Id --> <b>booking_id</b><br>
+                              Booking Amount Paid  --> <b>booking_amt_paid</b><br>
+                              Booked from date  --> <b>Booked From date</b><br>
+                              Rented Till --> <b>Date till</b>
+                            </p>
+                          </div>
+                        </div>
+                      
+                    {% else %}
+                    <div class="mb-3" style="background-color: white;">
+                      <div id="btn_div" class="my-2 mb-3">
+                              <form id="request_form">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="tool_id" id="tool_id" value={{i.tool_id}}>
+                                  <input type="hidden" name="tool_owner" id="tool_owner" value={{i.username}}>
+                                  <label for="required_from"class="mx-3 my-1">Required From</label>
+                                  <input id="required_from" class="form-control mb-2" type="date" required/>
+                                  <label for="required_till"class="mx-3 my-1">Required Till</label>
+                                  <input id="required_till" class="form-control mb-1" type="date" required />
+                                  <hr style="height:6px;background-color:#089000;">
+                                <button  id="request_tool" type="submit" class="btn btn-warning  mx-3">Make Request</button>
+                              </form>
+                              <script>
+                                if (({{tool_booked_status}} =="1") || ({{request_send_status}} =="1")) {
+                                  document.getElementById("request_tool").disabled=true;
+                                  if({{tool_booked_status}} =="1"){
+                                    $('#request_tool').text("Tool Is Booked");
+                                  }
+                                  if({{request_send_status}} =="1"){
+                                    $('#request_tool').text("Request Already Sended.");
+                                  }
+                                }
+                              </script>
+                      </div>
+                      <div class="my-1 mb-1 px-1">
+                        <h4 align="center">Owner Will See Following info..</h4>
+                        <p style="border: 3px dotted #ce4949; ">Your Name <b>{{request.user.first_name }} {{ request.user.last_name}}</b><br>
+                         {% if request_data %}
+                            {% for i in request_data %}
+                            Requested  From Date --> <b >{{i.required_from}}</b><br>
+                            Requested  Till Date  --> <b >{{i.required_till}}</b><br>
+                                {% if i.is_accepted %}
+                                      <h4><b style="color:green;">Your Request is Accepted By Owner</b></h4><br>
+                                      <h4><b style="color:red;">Please Conform Booking Within 24 hrs</b></h4>
+                                      <form id="book_form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="tool_id" id="tool_id" value={{i.tool_id}}>
+                                        <input type="hidden" name="tool_owner" id="tool_owner" value={{i.username}}>
+                                        <input type="hidden" name="request_id" id="request_id" value={{i.request_id}}>
+                                        <hr style="height:6px;background-color:#089000;">
+                                      <button  id="book_tool_btn" type="submit" class="btn btn-success  mx-3">Conform Booking</button>
+                                    </form>
+                                {% endif %}
+                                {% if i.is_rejected %}
+                                    <h4><b style="color:red;">Your Request is Rejected By Owner</b></h4>
+                                {% endif %}
+                            {% endfor %}
+                         {% else %}
+                          Requested  From Date --> <b>You Selected date</b><br>
+                          Requested  Till Date --> <b>Date Till rented</b>
+                         {% endif %}
+                        </p>
+                      </div>
+                    </div>
+                    {% endif %}
+          {% endfor %}
+        {% else %}
+        <p> <h2>Tool Not Found/Something Went Wrong<br>Looks Like<b style='color:red'> Invalid Tool id or Tool Is Deleted</b></h2></p>
+          {% endif %}
+       
+    </div><!-- /.list-group -->
+</div><!-- /.panel-body -->
+
+
+{% endblock body %}

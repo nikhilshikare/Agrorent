@@ -28,74 +28,83 @@
  //  <!-- ----------------scripts for Sending Otp And Checking It------------------- -->  
  $(document).ready(function() { 
     $(document).on('click','#send_otp', function (e) {
-      document.getElementById("send_otp").disabled = true;
-      document.getElementById("verify").disabled = true;
-      e.preventDefault();
-      var spinner = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading... </span></div> Please wait..'
-      $('#send_otp').html(spinner);
-      $.ajax({
-          type: 'POST',
-          url: '/otp',
-          data: {
-              email: $('#email').val(),
-              fname: $('#fname').val(),
-              phone: $('#phone').val(),
-              username: $('#username').val(),
-              csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-          },
-          success: function (data) {
-              if(data !="-1" && data!="0" && data!="1"&& data!="2")
-              {   
-                    document.getElementById("otp").style.display="block";
-                    swal('Otp Send.!!','<b>Otp Sended Succesfully..</b>','success');
-                    otp = data;
-                    document.getElementById("verify").disabled = false;
-                    document.getElementById("verify").style.visibility="visible";
-                    speek_data('Otp Sended Succesfully.');
+              email= $('#email').val();
+              fname= $('#fname').val();
+              phone= $('#phone').val();
+              username= $('#username').val();
+        if (email != null , email !="" && fname != null , fname !="" && phone != null , phone !="" && username != null,username !="") {
+          document.getElementById("send_otp").disabled = true;
+        document.getElementById("verify").disabled = true;
+        e.preventDefault();
+        var spinner = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading... </span></div> Please wait..'
+        $('#send_otp').html(spinner);
+        $.ajax({
+            type: 'POST',
+            url: '/otp',
+            data: {
+                email: $('#email').val(),
+                fname: $('#fname').val(),
+                phone: $('#phone').val(),
+                username: $('#username').val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function (data) {
+                if(data !="-1" && data!="0" && data!="1"&& data!="2")
+                {   
+                      document.getElementById("otp").style.display="block";
+                      swal('Otp Send.!!','<b>Otp Sended Succesfully..</b>','success');
+                      otp = data;
+                      document.getElementById("verify").disabled = false;
+                      document.getElementById("verify").style.visibility="visible";
+                      speek_data('Otp Sended Succesfully.');
+                  
+                      // <!-------------------- Timer For The Enable back The Send Otp Button------------------------ -->
+                      var Timer_btn = 120;
+                      //<-------------------- Timer For Redirecting to home------->
+                      function start_timer(){
+                          my_interval = setInterval(function redirect(){
+                              document.getElementById('send_otp').innerHTML = '<h6>Resent <b>otp</b> In.'+Timer_btn+'</h6>';
+                              Timer_btn=Timer_btn-1;
+                              //<-------------If redirect_time is equal Redirecting to home------->
+                              if (Timer_btn == 0){
+                                  clearInterval(my_interval);
+                                  $('#send_otp').text("send Otp");
+                                  document.getElementById("send_otp").disabled = false;
+                              }
+                          },1000)
+                    }
+                    start_timer();
                 
-                    // <!-------------------- Timer For The Enable back The Send Otp Button------------------------ -->
-                    var Timer_btn = 120;
-                    //<-------------------- Timer For Redirecting to home------->
-                    function start_timer(){
-                        my_interval = setInterval(function redirect(){
-                            document.getElementById('send_otp').innerHTML = '<h6>Resent <b>otp</b> In.'+Timer_btn+'</h6>';
-                            Timer_btn=Timer_btn-1;
-                            //<-------------If redirect_time is equal Redirecting to home------->
-                            if (Timer_btn == 0){
-                                clearInterval(my_interval);
-                                $('#send_otp').text("send Otp");
-                                document.getElementById("send_otp").disabled = false;
-                            }
-                        },1000)
-                  }
-                  start_timer();
-              
-                  // <!--------------------End  Timer For The Enable back The Send Otp Button------------------------ -->
-              }
+                    // <!--------------------End  Timer For The Enable back The Send Otp Button------------------------ -->
+                }
 
-              else if(data=="0"){
-                sweetAlert("Error!!", "<b><b style='color:red';>Username Alredy Exist</b>..!</b>", "error");
-              }
-              else if(data=="1"){
-                sweetAlert("Alert!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "warning");
-              }
-              else if (data=="2"){// indicate 2 for email exist in database
-                sweetAlert("Error!!", "<b><b style='color:red';>Email Alredy Exist</b>..!</b>", "error");
-              }
-              else{// indicate -1 to show error when otp dendinf faild!!!! 
-                alert("Something Went Wrong..Please Try Again Later");
-              }
-              if(data =="-1" || data =="0" ||  data =="1" ||  data =="2"){
-                $('#send_otp').text("send Otp");
-                document.getElementById("send_otp").disabled = false;
-              }
+                else if(data=="0"){
+                  sweetAlert("Error!!", "<b><b style='color:red';>Username Alredy Exist</b>..!</b>", "error");
+                }
+                else if(data=="1"){
+                  sweetAlert("Alert!!", "<b><b style='color:red';>Phone Alredy Exist</b>..!</b>", "warning");
+                }
+                else if (data=="2"){// indicate 2 for email exist in database
+                  sweetAlert("Error!!", "<b><b style='color:red';>Email Alredy Exist</b>..!</b>", "error");
+                }
+                else{// indicate -1 to show error when otp dendinf faild!!!! 
+                  alert("Something Went Wrong..Please Try Again Later");
+                }
+                if(data =="-1" || data =="0" ||  data =="1" ||  data =="2"){
+                  $('#send_otp').text("send Otp");
+                  document.getElementById("send_otp").disabled = false;
+                }
 
 
-              },
-              error: function (response) {
-                  alert('Something Went Wrong...');
-              }      
-        });
+                },
+                error: function (response) {
+                    alert('Something Went Wrong...');
+                }      
+          });
+          }
+          else {
+          sweetAlert("Blank Details!", "<b>Please Enter <b style='color:red';>Blank Details</b>..!</b>", "warning");
+        }
     });
   });
 

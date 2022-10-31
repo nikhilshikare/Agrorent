@@ -1,0 +1,277 @@
+{% extends 'base.html' %}
+{% block title %}Requests{% endblock title %}
+{% block body %}
+<style>
+    body{margin-top:0px;
+    background:#eee;
+    background-color: #53d39c;
+}
+
+/* ========================================================================
+ * MESSAGES
+ * ======================================================================== */
+.message form {
+  padding: 6px 15px;
+  background-color: #FAFAFA;
+  border-bottom: 1px solid #E6EBED;
+}
+.message form .has-icon .form-control-icon {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  right: 0;
+  width: 34px;
+  line-height: 33px;
+  text-align: center;
+  color: #777;
+}
+.message > a {
+  position: relative;
+}
+.message .indicator {
+  text-align: center;
+}
+.message .indicator .spinner {
+  left: 26%;
+  width: 200px;
+  font-size: 13px;
+  line-height: 17px;
+  color: #999;
+}
+
+.message-wrapper {
+  position: relative;
+  padding: 0px;
+  background-color: #ffffff;
+  margin: 0px;
+}
+.message-wrapper .message-sideleft {
+  vertical-align: top !important;
+}
+.message-wrapper .message-sideleft[class*="col-"] {
+  padding-right: 0px;
+  padding-left: 0px;
+}
+.message-wrapper .message-sideright {
+  background-color: #f8f8f8;
+}
+.message-wrapper .message-sideright[class*="col-"] {
+  padding: 30px;
+}
+.message-wrapper .message-sideright .panel {
+  border-top: 1px dotted #DDD;
+  padding-top: 20px;
+}
+.message-wrapper .message-sideright .panel:first-child {
+  border-top: none;
+  padding-top: 0px;
+}
+.message-wrapper .message-sideright .panel .panel-heading {
+  border-bottom: none;
+}
+.message-wrapper .panel {
+  background-color: transparent !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.message-wrapper .panel .panel-heading, .message-wrapper .panel .panel-body {
+  background-color: transparent !important;
+}
+.message-wrapper .media .media-body {
+  font-weight: 300;
+}
+.message-wrapper .media .media-heading {
+  margin-bottom: 0px;
+}
+.message-wrapper .media small {
+  color: #999999;
+  font-weight: 400;
+}
+
+.list-message .list-group-item {
+ font-size: larger;
+ font-weight: bold;
+  padding: 15px;
+  color: #040404 !important;
+  border-right: 3px solid #8CC152 !important;
+}
+.list-message .list-group-item.active {
+  background-color: #EEEEEE;
+  border-bottom: 1px solid #DDD !important;
+}
+.list-message .list-group-item.active p {
+  color: #999999 !important;
+}
+.list-message .list-group-item.active:hover, .list-message .list-group-item.active:focus, .list-message .list-group-item.active:active {
+  background-color: #EEEEEE;
+}
+.list-message .list-group-item small {
+  font-size: 12px;
+}
+.list-message .list-group-item .list-group-item-heading {
+    font-weight: bolder;
+  color: #0c0c0c !important;
+}
+.list-message .list-group-item .list-group-item-text {
+  margin-bottom: 10px;
+}
+.list-message .list-group-item:last-child {
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  border-bottom: 1px solid #DDD !important;
+}
+.avatar{
+    width:50px;
+    height:50px;
+}
+.photo_align_class{
+    display: flex;
+    align-items: center;
+}
+.image_para_box{
+  border: 10px solid goldenrod;
+  margin: 1px 1px 1px 1px;
+}
+
+
+
+  @media screen  and (max-width: 420px) {
+    .image_class{
+          width: 250px;
+          height: 200px;
+      }
+   .image_para_box,.outer_data_div{
+        display: flex;
+        justify-content: center;
+    }
+    .small_data_div{
+        width: 100vw;
+        height: 100vh;
+   }
+}
+
+
+@media  screen and (min-width: 420px) {
+      .image_class{
+            width: 420px;
+            height: 16em;
+    }
+      
+    .outer_data_div{
+        display: flex;
+        justify-content: center;
+    }
+    .small_data_div{
+        width:none;
+        height: none;
+  }
+
+}
+@media  screen and (min-width: 800px) {
+        /* styles for browsers larger than 960px; */
+        .image_class{
+        width: 600px;
+        height: 370px;
+    }
+    .outer_data_div{
+
+        display: flex;
+        justify-content: center;
+    }
+}
+
+
+</style>
+<!-- navbar for home start here -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    {% if request.user.is_anonymous %}
+    <a class="navbar-brand" >Hii <b style="color: red;">User</b> , Welcome To AgroRent</a>
+    {% else %}
+    <a class="navbar-brand">Hii <b style="color: green;">{{request.user.first_name}}</b>, Welcome To AgroRent</a>
+    {% endif %}
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    {% if not request.user.is_anonymous %}
+    <!-- Example single danger button -->
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger dropdown-toggle mx-5" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/my_tools">My Tools / Machine</a></li>
+            <li><a class="dropdown-item" href="/add_tools">Upload / Add Tools</a></li>
+            <li><a class="dropdown-item" href="#">Request</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Separated link</a></li>
+          </ul>
+        </div>
+    {% endif %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link " aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/search_tool">Search</a>
+        </li>
+        <li class="nav-item">
+          {% if request.user.is_anonymous %}
+          <a class="nav-link" href="/sign_in">Sign-In</a>
+          {% else %}
+          <a class="nav-link" href="/sign_out">Sign-Out</a>
+          {% endif %}
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/contact">Contact Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About Us</a>
+        </li>
+      </ul>
+    </div>
+    
+  </div>
+</nav>
+
+<form action="/search_tool" method="POST" class="mb-3">
+    {% csrf_token %}
+    <div class="input-group mb-3">
+        <input type="text"id="location" placeholder="Enter Place Name" class="form-control" aria-label="Text input with dropdown button">
+        <select id="tool_type" class="form-select" aria-label="Default select example">
+            <option selected>Select tool Type</option>
+            <option value="tractor">Tractor</option>
+            <option value="cutter">Cutter</option>
+            <option value="sprayer">Sprayer</option>
+            <option value="other">Other</option>
+          </select>
+        <button type="submit" class="btn btn-success">Search</button>
+      </div>
+</form>
+<div class="panel-body no-padding outer_data_div">
+    {% if tools_data_lst %}
+    {% for i  in tools_data_lst %}
+      <div class="list-group no-margin list-message small_data_div" >
+                  <a  href="/show_info?tool_id={{i.tool_id}}" class="list-group-item "> 
+                  <p class="list-group-item-text image_para_box">
+                      <img  src="{{i.tool_photo.url}}" class="rounded float-left image_class" alt="...">
+                  </p>
+                  <h3 class="list-group-item-heading" >{{i.tool_type}} </h3>
+                  <p class="list-group-item-text">{{i.tool_spec_1}}</p>
+                  <p class="list-group-item-text">{{i.tool_spec_2}}</p>
+                  <p class="list-group-item-text">Rent Price :-{{i.rent_price}}</p>
+                  <p class="list-group-item-text">Location :- {{i.location}}</p>
+                  <span class="label label-default pull-right circle">Owner :-{{request.user.first_name}} {{request.user.last_name}}</span>
+                  <div class="clearfix"></div>
+                  </a>
+               {% endfor %} 
+      </div><!-- /.list-group -->
+      {% endif %}
+  </div><!-- /.panel-body -->
+  
+{% endblock body %}

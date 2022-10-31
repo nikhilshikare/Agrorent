@@ -1,0 +1,129 @@
+{% extends 'base2.html' %}
+{% block title %}Requests{% endblock title %}
+{% block body %}
+<style>
+    body{
+    margin-top:0px;
+    background:#d2d6d8;
+  }
+  #head_div {
+    margin-bottom: 0.6rem;
+}
+
+#display {
+    height: 71vh;
+    overflow: auto;
+    opacity: 0.95;
+}
+
+
+</style>
+<script type="text/javascript">
+      {% if status == "1" %}
+      swal('Success!!','<b>Request Accepted Succesfully..</b>','success');
+      speek_data('Request Accepted..');
+      redirect_timeout = setTimeout(()=>{ clearTimeout(redirect_timeout);  window.location =  "/requests?status=2";},2000);    
+      {% endif %}  
+      {% if status == "0" %}
+      sweetAlert("Rejected!!", "<b><b style='color:red';>Request <br></b>Rejected Succesfully.!</b>", "error");
+      speek_data('Request Rejected..')
+      redirect_timeout = setTimeout(()=>{ clearTimeout(redirect_timeout);  window.location =  "/requests?status=2";},2000);   
+      {% endif %}
+</script>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-0">
+  <div class="container-fluid">
+    <a class="navbar-brand" >AgroRent Resources Manager </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a style="font-weight: bolder; color: #47d1b7;" class="nav-link" aria-current="page" href="/add_tools">Add Tool-Machinery</a>
+        </li>
+        <li class="nav-item">
+          <a style="font-weight: bolder; color: #49ce6e;" class="nav-link" href="/my_tools">My Tools</a>
+        </li>
+        <li class="nav-item">
+          <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="#">DashBoard</a>
+        </li>
+        <li class="nav-item">
+          <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/requests?status=2">Requests</a>
+        </li>
+        <li class="nav-item">
+          {% if request.user.is_anonymous %}
+          <a style="font-weight: bolder; color: #ffffff;" class="nav-link" href="/sign_in">Sign-In</a>
+          {% else %}
+          <a style="font-weight: bolder; color: #ce4949;" class="nav-link" href="/sign_out">Sign-Out</a>
+          {% endif %}
+        </li>
+        <li>
+          <a style="font-weight: bolder; color: white;" class="nav-link" href="/">Home</a>
+        </li>
+      </ul>
+    </div>  
+  </div>
+</nav>
+<!--   ------------------------ Html Core Part For Display Requests Start from Here----------  -->
+
+
+
+{% if send_from_lst %}
+  <div id="send_from">
+        <h3 align ="center"  style="border:2px solid rgb(0, 0, 0);background-color:#47d1b7;border-radius:25px;"> Request Sended From You</h3>
+    {% for i  in send_from_lst %}
+            <div class="alert alert-success"  style="border-radius: 20px;box-shadow:10px 10px 10px #49ce6e;" role="alert">
+            <!--   <h4 class="alert-heading">tool Name</h4> -->
+            <a href="/show_info?tool_id={{i.tool_id}}" style="color: black;text-decoration: none;">
+              <p>
+                Agro Tool Id  -->    {{i.tool_id}} <br>
+                Requested From -->    {{i.required_from}}<br>
+                Requested Till -->    {{i.required_till}}<br>
+                </p>
+                <h4>Requested From --> {{request.user.first_name}} {{request.user.last_name}}</h4>
+              <hr>
+            </a>
+              <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+            </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <hr class="my-3 mb-3" style="width: 100vw;height:4px; color: rgb(255, 9, 9);">
+
+  {% if send_to_lst %}
+     <div id="send_to">
+      <h3 align ="center" style="border:2px solid rgb(0, 0, 0);background-color:#6c88cf;border-radius:25px;">Sended Request From Others</h3>
+      {% for j  in send_to_lst %}
+              <div class="alert alert-warning my-1 mb-2" style="border-radius: 20px;box-shadow:10px 10px 10px #ce4949;" role="alert">
+               <!-- <h4 class="alert-heading">Tool type</h4>  --> 
+               <a href="/show_info?tool_id={{j.tool_id}}&action_btn_status=1" style="color: black;text-decoration: none;">
+                  <p>Agro Tool Id  -->    {{j.tool_id}} <br>
+                    Requested From -->    {{j.required_from}}<br>
+                    Requested Till -->    {{j.required_till}}<br>
+                    </p>
+                    {% if sender_data %}
+                    {% for i in sender_data %}
+                    <h4>Requested From --> {{i.first_name}} {{i.last_name}}</h4>
+                    {% endfor %}
+                    {% endif %}
+                  <hr>
+                </a>
+                <p class="mb-0"><b>Request Action </b>
+                  {% if j.is_accepted %}
+                <h5><b style="color:green;">  Request Accepted</b></h5>
+                  {% endif %}
+                  {% if  j.is_rejected %}
+                  <h5><b style="color:red">Rejected Request</b></h5>
+                  {% endif %}
+                  {% if not j.is_accepted and  not j.is_rejected %}
+                  <a type="button"  class="btn btn-success" href="/requests_action?btn_action=1&request_id={{j.request_id}}">Accept</a>
+                  <a type="button" class="btn btn-danger" href="/requests_action?btn_action=0&request_id={{j.request_id}}">Reject</a>
+                  {% endif %}
+              </p>
+              </div>
+      {% endfor %}
+     </div>
+     {% endif %}
+     
+
+{% endblock body %}

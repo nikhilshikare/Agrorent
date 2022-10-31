@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+import datetime
 import os
 from uuid import uuid4
 from django.utils.deconstruct import deconstructible
@@ -70,7 +70,8 @@ class Request(models.Model):
     request_id   = models.CharField(unique=True ,primary_key=True, null=False ,max_length=20)#'4 digit+Phone + 6 digit random no'
     send_to     = models.CharField(unique=False ,max_length=50,blank=False)#recever username
     send_from  = models.CharField(unique=False ,max_length=50,blank=False)#sender username
-    request_time = models.DateTimeField( default=datetime.now , blank=True)
+    #Current_dateTime = datetime.datetime.strptime(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S")
+    request_time = models.DateTimeField( default=datetime.datetime.strptime(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S") , blank=True)
     tool_id   = models.CharField(null=False ,max_length=20)
     is_accepted  = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
@@ -87,11 +88,11 @@ class Booking(models.Model):
     booking_amt_paid = models.CharField(max_length=12)
     rented_to     = models.CharField(unique=False ,max_length=50,blank=False)#rented_to_person username
     owner_name  = models.CharField(unique=False ,max_length=50,blank=False)#owner_name username
-    request_time = models.DateTimeField( default=datetime.now , blank=True)
+    booking_time = models.DateTimeField( default=datetime.datetime.strptime(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S"), blank=True)
     tool_id   = models.CharField(null=False ,max_length=20)
     is_booked  = models.BooleanField(default=False)
-    required_from =  models.DateTimeField(blank=True)
-    required_till = models.DateTimeField(blank=True)
+    required_from =  models.CharField(max_length=12,blank=True)
+    required_till = models.CharField(max_length=12,blank=True)
     def __str__(self):
         return self.booking_id
 

@@ -33,7 +33,7 @@
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/my_tools">My Tools / Machine</a></li>
             <li><a class="dropdown-item" href="/add_tools">Upload / Add Tools</a></li>
-            <li><a class="dropdown-item" href="#">Request</a></li>
+            <li><a class="dropdown-item" href="/requests?status=2">Request</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Separated link</a></li>
           </ul>
@@ -45,7 +45,7 @@
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/services">Search</a>
+          <a class="nav-link" href="/search_tool">Search</a>
         </li>
         <li class="nav-item">
           {% if request.user.is_anonymous %}
