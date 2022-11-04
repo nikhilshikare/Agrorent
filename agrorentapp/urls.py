@@ -32,6 +32,11 @@ urlpatterns = [
     path('requests_action',views.Request_Tool.requests_action,name='requests_action'),
     path('requests',views.Request_Tool.requests,name='requests'),
     path('request_tool',views.Request_Tool.request_tool,name='request_tool'),
-    path('book_tool',views.Request_Tool.book_tool,name='book_tool'),
     #<--------- Class Request releted path / urls ends here ------->
+
+    #<--------- Booking releted path / urls start here ------->
+    path('my_booking',views.Booking_Tool.my_booking,name='my_booking'),
+    path('book_tool',views.Request_Tool.book_tool,name='book_tool'),
+    #<--------- Booking releted path / urls ends here ------->
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)#To store The Images and Media Files

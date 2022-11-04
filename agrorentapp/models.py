@@ -86,8 +86,8 @@ class Request(models.Model):
 class Booking(models.Model):
     booking_id   = models.CharField(unique=True ,primary_key=True, null=False ,max_length=20)#tool_id+4 digit no
     booking_amt_paid = models.CharField(max_length=12)
-    rented_to     = models.CharField(unique=False ,max_length=50,blank=False)#rented_to_person username
-    owner_name  = models.CharField(unique=False ,max_length=50,blank=False)#owner_name username
+    rented_to     = models.CharField(unique=False ,max_length=50,blank=False)#booking_doneby_person username
+    owner_name  = models.CharField(unique=False ,max_length=50,blank=False)#tool_owner_name username
     booking_time = models.DateTimeField( default=datetime.datetime.strptime(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "%Y-%m-%d %H:%M:%S"), blank=True)
     tool_id   = models.CharField(null=False ,max_length=20)
     is_booked  = models.BooleanField(default=False)

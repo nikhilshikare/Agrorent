@@ -1,5 +1,4 @@
 from json import tool
-from tkinter.tix import Tree
 from django.contrib.auth.models import User
 from django.contrib.auth import logout,authenticate,login
 from django.shortcuts import render , redirect
@@ -65,9 +64,39 @@ def tool_still_booked(tool_id):
 
 
 
-# <------------------Add/show Agro-Tools class  start from here------------------------------>
+# <------------------Booking Tools class  start from here------------------------------>
 
 
+class Booking_Tool:
+    # <------------------My Booking  function is start here------------------------------>
+
+    def my_booking(request):
+        if request.user.is_authenticated:
+   # <------------------Tool Booking Done By Others--->
+            Booking_data_lst_byothers=[]
+            try:
+                booking_data=Booking.objects.filter(owner_name=request.user.username).values()
+                for i in booking_data:
+                    Booking_data_lst_byothers.append(i)
+            except:
+                Booking_data_lst_byothers.append("No Booking Done By Others")
+           
+  # <------------------Tool Booking Done By Me ---->
+            Booking_data_lst_byme=[]
+            try:
+                booking_data_byme=Booking.objects.filter(rented_to=request.user.username).values()
+                for i in booking_data_byme:
+                    Booking_data_lst_byme.append(i)
+            except:
+                Booking_data_lst_byme.append("No Booking Done By Me")
+            return render(request,"my_booking.html",context={'booking_data_byothers':Booking_data_lst_byothers,'booking_data_byme':Booking_data_lst_byme,})
+        else:
+            return redirect("/sign_in")
+
+
+
+
+# <------------------Request Tools class  start from here------------------------------>
 
 class Request_Tool:
 
@@ -94,8 +123,7 @@ class Request_Tool:
                     return HttpResponse("0")#indicate tool may booked or some technical error
                 else:
                     conform_book_tool = Booking.objects.create(booking_id=genrate_booking_id(tool_id),booking_amt_paid="1000",rented_to=request.user.username,
-                    owner_name=tool_owner,tool_id=tool_id,is_booked=True,required_from=required_from,
-                    required_till=required_till)
+                    owner_name=tool_owner,tool_id=tool_id,is_booked=True,required_from=required_from,required_till=required_till)
                     conform_book_tool.save()
                     Request.objects.filter(tool_id=tool_id).delete()
                     return HttpResponse("1")#to indicate Request made..

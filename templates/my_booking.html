@@ -1,6 +1,7 @@
 {% extends 'base2.html' %}
-{% block title %}Requests{% endblock title %}
+{% block title %}My Booking{% endblock title %}
 {% block body %}
+
 <style>
     body{
     margin-top:0px;
@@ -51,8 +52,8 @@
           <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/requests?status=2">Requests</a>
         </li>
         <li class="nav-item">
-          <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/my_booking">My Booking</a>
-        </li>
+            <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/my_booking">My Booking</a>
+          </li>
         <li class="nav-item">
           {% if request.user.is_anonymous %}
           <a style="font-weight: bolder; color: #ffffff;" class="nav-link" href="/sign_in">Sign-In</a>
@@ -71,62 +72,56 @@
 
 
 
-{% if send_from_lst %}
+{% if booking_data_byme %}
   <div id="send_from">
-        <h3 align ="center"  style="border:2px solid rgb(0, 0, 0);background-color:#47d1b7;border-radius:25px;"> Request Sended From You</h3>
-    {% for i  in send_from_lst %}
+        <h3 align ="center"  style="border:2px solid rgb(0, 0, 0);background-color:#47d1b7;border-radius:25px;">Tool Booking done By You</h3>
+    {% for i  in booking_data_byme %}
             <div class="alert alert-success"  style="border-radius: 30px;box-shadow:10px 10px 10px #49ce6e;" role="alert">
             <!--   <h4 class="alert-heading">tool Name</h4> -->
-            <a href="/show_info?tool_id={{i.tool_id}}" style="color: black;text-decoration: none;">
+            <a style="font-weight:bolder;color: black;text-decoration: none;">
               <p>
-                Agro Tool Id  -->    {{i.tool_id}} <br>
+                Booking Id  -->    {{i.booking_id}} <br>
                 Requested From -->    {{i.required_from}}<br>
                 Requested Till -->    {{i.required_till}}<br>
-                <h4>Requested From --> {{request.user.first_name}} {{request.user.last_name}}</h4>
+                Booking Time  -->    {{i.booking_time}} <br>
+                Booking Amount Paid -->    {{i.booking_amt_paid}}<br>
+                Tool Id -->    {{i.tool_id}}<br>
               </p>
               <hr>
             </a>
-              <p class="mb-0"></p>
+              <p class="mb-0">
+                <h5 style="font-weight:bolder;">Requested From --> {{request.user.first_name}} {{request.user.last_name}}</h5>
+                <h5 style="font-weight:bolder;">Tool Owner Username --> {{i.owner_name}}</h5></p>
             </div>
     {% endfor %}
   </div>
   {% endif %}
   <hr class="my-3 mb-3" style="width: 100vw;height:4px; color: rgb(255, 9, 9);">
 
-  {% if send_to_lst %}
+{% if booking_data_byothers %}
      <div id="send_to">
-      <h3 align ="center" style="border:2px solid rgb(0, 0, 0);background-color:#6c88cf;border-radius:25px;">Sended Request From Others</h3>
-      {% for j  in send_to_lst %}
-              <div class="alert alert-warning my-1 mb-2" style="border-radius: 20px;box-shadow:10px 10px 10px #f00b50;" role="alert">
+      <h3 align ="center" style="border:2px solid rgb(0, 0, 0);background-color:#6c88cf;border-radius:25px;">Booking Done From Others</h3>
+      {% for i  in booking_data_byothers %}
+              <div class="alert alert-warning my-1 mb-2" style="background:#fde6da;border-radius: 20px;box-shadow:10px 10px 10px #f00b50" role="alert">
                <!-- <h4 class="alert-heading">Tool type</h4>  --> 
-               <a href="/show_info?tool_id={{j.tool_id}}&action_btn_status=1" style="color: black;text-decoration: none;">
-                  <p>Agro Tool Id  -->    {{j.tool_id}} <br>
-                    Requested From -->    {{j.required_from}}<br>
-                    Requested Till -->    {{j.required_till}}<br>
-                    </p>
-                    {% if sender_data %}
-                    {% for i in sender_data %}
-                    <h4>Requested From --> {{i.first_name}} {{i.last_name}}</h4>
-                    {% endfor %}
-                    {% endif %}
-                  <hr>
-                </a>
-                <p class="mb-0"><b>Request Action </b>
-                  {% if j.is_accepted %}
-                <h5><b style="color:green;">  Request Accepted</b></h5>
-                  {% endif %}
-                  {% if  j.is_rejected %}
-                  <h5><b style="color:red">Rejected Request</b></h5>
-                  {% endif %}
-                  {% if not j.is_accepted and  not j.is_rejected %}
-                  <a type="button"  class="btn btn-success" href="/requests_action?btn_action=1&request_id={{j.request_id}}">Accept</a>
-                  <a type="button" class="btn btn-danger" href="/requests_action?btn_action=0&request_id={{j.request_id}}">Reject</a>
-                  {% endif %}
-              </p>
+               <a style="font-weight:bolder;color: black;text-decoration: none;">
+                <p >
+                  Booking Id  -->    {{i.booking_id}} <br>
+                  Requested From -->    {{i.required_from}}<br>
+                  Requested Till -->    {{i.required_till}}<br>
+                  Booking Time  -->    {{i.booking_time}} <br>
+                  Booking Amount Paid -->    {{i.booking_amt_paid}}<br>
+                  Tool Id -->    {{i.tool_id}}<br>
+                </p>
+                <p class="mb-0">
+                  <h5 style="font-weight:bolder;">Tool Owner -->{{request.user.first_name}} {{request.user.last_name}}</h5>
+                  <h5 style="font-weight:bolder;">Requested From Username --> {{i.owner_name}}</h5></p>
+                <p class="mb-0"></p>
               </div>
       {% endfor %}
      </div>
      {% endif %}
-     
+
+
 
 {% endblock body %}
