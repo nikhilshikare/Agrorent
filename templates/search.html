@@ -213,7 +213,7 @@
             <li><a class="dropdown-item" href="/add_tools">Upload / Add Tools</a></li>
             <li><a class="dropdown-item" href="#">Request</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Separated link</a></li>
+            <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
           </ul>
         </div>
     {% endif %}
@@ -271,7 +271,6 @@
                   <p class="list-group-item-text">{{i.tool_spec_2}}</p>
                   <p class="list-group-item-text">Rent Price :-{{i.rent_price}}</p>
                   <p class="list-group-item-text">Location :- {{i.location}}</p>
-                  <span class="label label-default pull-right circle">Owner :-{{request.user.first_name}} {{request.user.last_name}}</span>
                   <div class="clearfix"></div>
                   </a>
                {% endfor %} 
