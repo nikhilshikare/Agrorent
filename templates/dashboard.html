@@ -1,0 +1,234 @@
+{% extends 'base2.html' %}
+{% block title %}DashBoard{% endblock title %}
+{% block body %}
+<style>
+    body{margin-top:0px;
+    background-color: white;
+}
+.div_holder{
+  display: flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+}
+#booking_request_div , #tools_column_div{
+  width: 100vw;
+  height: 45vh; 
+  margin: 0 auto;
+}
+
+@media  screen and (min-width: 1000px) {
+        /* styles for browsers larger than 300px; */
+      
+      .div_holder{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      #booking_request_div , tools_column_div{
+        width: 50vw;
+        height: 450px; 
+        margin: 0 auto;
+      }
+    
+}
+</style>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-1 my-0">
+    <div class="container-fluid">
+      <a class="navbar-brand" >AgroRent Resources Manager </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #47d1b7;" class="nav-link" aria-current="page" href="/add_tools">Add Tool-Machinery</a>
+          </li>
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #49ce6e;" class="nav-link" href="/my_tools">My Tools</a>
+          </li>
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="/dashboard">DashBoard</a>
+          </li>
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/requests?status=2">Requests</a>
+          </li>
+          <li class="nav-item">
+            <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/my_booking">My Booking</a>
+          </li>
+          <li class="nav-item">
+            {% if request.user.is_anonymous %}
+            <a style="font-weight: bolder; color: #ffffff;" class="nav-link" href="/sign_in">Sign-In</a>
+            {% else %}
+            <a style="font-weight: bolder; color: #ce4949;" class="nav-link" href="/sign_out">Sign-Out</a>
+            {% endif %}
+          </li>
+          <li>
+            <a style="font-weight: bolder; color: white;" class="nav-link" href="/">Home</a>
+          </li>
+        </ul>
+      </div>  
+    </div>
+  </nav>
+
+<!------------------------------------------- Scripts Tag start From Here -------------------------------->
+
+  <!--Load the AJAX API-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+  <script type="text/javascript">
+
+    // Load the Visualization API and the corechart package.
+    google.charts.load('current', {'packages':['corechart']});
+
+    // Set a callback to run when the Google Visualization API is loaded.
+    google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(draw_booking_Chart);
+    google.charts.setOnLoadCallback(draw_request_Chart);
+    google.charts.setOnLoadCallback(draw_request_column);
+    google.charts.setOnLoadCallback(draw_tools_column);
+
+    // Callback that creates and populates a data table,
+    // instantiates the pie chart, passes in the data and
+    // draws it.
+     
+    function drawChart() {
+      //<-------------------------------- Total tools You Own Pie Chart-------------------------------------->.
+
+
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Topping');
+          data.addColumn('number', 'Slices');
+          data.addRows([
+            ['Other', {{Other_count}}],
+            ['Cutter',  {{Cutterr_count}}],
+            ['Sprayer',{{Sprayer_count}}],
+            ['Tractor', {{Tractor_count}}],
+          ]);
+          // Set chart options
+          var options = {'title':'Tools Own By You',
+                        'width':400,
+                        'height':300};
+
+          // Instantiate and draw our chart, passing in some options.
+          var chart = new google.visualization.PieChart(document.getElementById('tools_chart_div'));
+          chart.draw(data, options);
+    }
+
+
+  //<---------------------- Booking done By you and Others And Request Done By You And Others ------------------->.
+
+
+  
+     
+  function draw_booking_Chart() {
+   
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Topping');
+    data.addColumn('number', 'Slices');
+    data.addRows([
+      ['Booking by You', {{booking_by_you}}],
+      ['Booking By Others',  {{booking_by_others}}],
+    ]);
+    // Set chart options
+    var options = {'title':'Booking Done By You And Others',
+                  'width':400,
+                  'height':300};
+
+    // Instantiate and draw our chart, passing in some options.
+    var chart = new google.visualization.PieChart(document.getElementById('booking_chart_div'));
+    chart.draw(data, options);
+}
+
+   //<---------------------- Request done By you and Others And Request Done By You And Others ------------------->.
+
+function draw_request_Chart() {
+   
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'Topping');
+  data.addColumn('number', 'Slices');
+  data.addRows([
+    ['Request by You', {{request_by_you}}],
+    ['Request By Others',  {{request_by_others}}],
+  ]);
+  // Set chart options
+  var options = {'title':'Tool Request done By You And Others',
+                'width':400,
+                'height':300};
+
+  // Instantiate and draw our chart, passing in some options.
+  var chart = new google.visualization.PieChart(document.getElementById('request_chart_div'));
+  chart.draw(data, options);
+}
+
+ //<---------------------- COLUMN CHART Request done By you and Others And Request Done By You And Others ------------------->.
+ 
+  function draw_request_column() {
+    // Define the chart to be drawn.
+    var data = google.visualization.arrayToDataTable([
+       ['Type', 'Frequency'],
+       ['Request by You', {{request_by_you}}],
+       ['Request By Others',  {{request_by_others}}],
+       ['Booking by You', {{booking_by_you}}],
+       ['Booking By Others',  {{booking_by_others}}],
+    ]);
+
+    var options = {title: 'Booking And Request Frequency (in Numbers)'}; 
+
+    // Instantiate and draw the chart.
+    var chart = new google.visualization.ColumnChart(document.getElementById('booking_request_div'));
+    chart.draw(data, options);
+ }
+ 
+  //<--------------------------- COLUMN Tool Info Charts ----------------------------->
+  
+  function draw_tools_column() {
+        var data = google.visualization.arrayToDataTable([
+        ['Element', 'Number', { role: 'style' }],
+        ['Other', {{Other_count}},'#b87333'],
+        ['Cutter',  {{Cutterr_count}},'silver' ],
+        ['Sprayer',{{Sprayer_count}}, 'gold'],
+        ['Tractor', {{Tractor_count}},'color: #e5e4e2' ],
+        ['Total No ', {{no_of_tools_own}},'color: #ff0000' ],
+    ]);
+    
+    var options = {title: 'Different Tool Quantity (in Numbers)'}; 
+
+    // Instantiate and draw the chart.
+    var chart = new google.visualization.ColumnChart(document.getElementById('tools_column_div'));
+    chart.draw(data, options);
+ }
+
+  
+
+
+  </script>
+  
+
+
+  <!-- --------------------Body from Below navebar tart From here----------------------- -->
+
+    <!--Div that will hold the pie chart-->
+    <div class='div_holder'>
+      <div class="d-grid gap-2 d-md-block my-1 mb-1 ">
+        <a href='/my_tools' class="btn btn-success">Manage Your Tools</a>
+        <a href='/requests?status=2' class="btn btn-success">Manage Request Reletad data</a>
+        <a href='/my_booking' class="btn btn-success">Manage Booking Reletad data</a>
+      </div>
+    </div>
+    <div class='div_holder'>
+      <div id="tools_chart_div"></div>
+      <div id="booking_chart_div"></div>
+      <div id="request_chart_div"></div>
+    </div>
+
+
+    <!--Div tFor Column Graph -->
+    
+    <div class='div_holder'>
+      <div  id="booking_request_div"></div>
+      <div id="tools_column_div"></div>
+    </div>
+   
+{% endblock body %}

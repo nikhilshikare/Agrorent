@@ -1,4 +1,3 @@
-from json import tool
 from django.contrib.auth.models import User
 from django.contrib.auth import logout,authenticate,login
 from django.shortcuts import render , redirect
@@ -8,14 +7,34 @@ from django.core.mail import send_mail
 from agrorentapp.forms import ToolForm
 import random 
 import datetime
+import schedule , threading , time
 from django.core.files.storage import default_storage
 
+#<*********************************************************>
 
 # username and Password for django super user
 # Username:-nikhil & Password:-nikhil9869
 # (Please creatE SuperUser Then Store It here If you Have HABIT Of Forgeting passwords)
 #Email And Password:
 #Email :- agrorent2022@gmail.com && Password:-agrorent9869@#
+
+#<*********************************************************>
+
+
+#<-------------------keep run code infinite to delete Request After Every 24 hrs ---------------------------->
+# def del_request():
+#     time.sleep(30)
+#     Request.objects.raw('DELETE  FROM  agrorentapp_Request where request_time - %s > 0.3' % datetime.datetime.now())
+#     schedule.every(1).minutes.do(del_request)
+
+# def everday_task():
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(60)
+
+# t1 = threading.Thread(target=everday_task)
+# t1.start()
+
 # Create your views here.
 
 def home(request):
@@ -63,16 +82,61 @@ def tool_still_booked(tool_id):
 
 
 
-
 # <------------------Booking Tools class  start from here------------------------------>
 
 
 class Booking_Tool:
+
+    # <------------------ Dashboard  function is start here------------------------------>
+    def dashboard(request):
+        if request.user.is_authenticated:
+            #<-------------------------******Tool Own Count*********----------------------->
+            no_of_tools_own = Tool.objects.filter(username=request.user.username).count()
+            #<-------------------------******Tool Booking Count*********----------------------->
+            booking_by_you = Booking.objects.filter(rented_to=request.user.username).count()
+            booking_by_others = Booking.objects.filter(owner_name=request.user.username).count()
+            #<-------------------------******Tool Request Count*********----------------------->
+            request_by_you = Request.objects.filter(send_from=request.user.username).count()
+            request_by_others = Request.objects.filter(send_to=request.user.username).count()
+
+            #<-------------------------******Tool Type Wise Count*********----------------------->
+            Tractor_count = Tool.objects.filter(username=request.user.username).filter(tool_type='Tractor').count()
+            Sprayer_count = Tool.objects.filter(username=request.user.username).filter(tool_type='Sprayer').count()
+            Cutterr_count = Tool.objects.filter(username=request.user.username).filter(tool_type='Cutter').count() 
+            Other_count = Tool.objects.filter(username=request.user.username).filter(tool_type='Other').count()           
+            context={
+                'no_of_tools_own':no_of_tools_own,
+                'booking_by_you':booking_by_you,
+                'booking_by_others':booking_by_others,
+                'request_by_you':request_by_you,
+                'request_by_others':request_by_others,
+                'Other_count':Other_count,
+                'Cutterr_count':Cutterr_count,
+                'Sprayer_count':Sprayer_count,
+                'Tractor_count' : Tractor_count,
+            }
+            return render(request,'dashboard.html',context=context)
+        else:
+            return redirect('/')
+
+
+   # <------------------Unrent function is start here------------------------------>
+    def unrent_tool(request):
+        if request.user.is_authenticated:
+            tool_id = request.POST.get('tool_id')
+            try:
+                Booking.objects.filter(tool_id=tool_id).update(is_booked=False)
+                return HttpResponse("1")
+            except:
+                return HttpResponse("0")
+        else:
+            return redirect('/')
+
     # <------------------My Booking  function is start here------------------------------>
 
     def my_booking(request):
         if request.user.is_authenticated:
-   # <------------------Tool Booking Done By Others--->
+         # <------------------Tool Booking Done By Others--->
             Booking_data_lst_byothers=[]
             try:
                 booking_data=Booking.objects.filter(owner_name=request.user.username).values()
@@ -81,7 +145,7 @@ class Booking_Tool:
             except:
                 Booking_data_lst_byothers.append("No Booking Done By Others")
            
-  # <------------------Tool Booking Done By Me ---->
+        # <------------------Tool Booking Done By Me ---->
             Booking_data_lst_byme=[]
             try:
                 booking_data_byme=Booking.objects.filter(rented_to=request.user.username).values()
@@ -126,7 +190,13 @@ class Request_Tool:
                     owner_name=tool_owner,tool_id=tool_id,is_booked=True,required_from=required_from,required_till=required_till)
                     conform_book_tool.save()
                     Request.objects.filter(tool_id=tool_id).delete()
-                    return HttpResponse("1")#to indicate Request made..
+                    #<-----------------Email Send After Conforming The Booking To The User-------------->
+                    sub=f'Booking Succesfull For tool id = {tool_id}'
+                    message=f'Hii {request.user.first_name} {request.user.last_name} Greeting from Agrorent..Congratulations Your Tool Booking Is Done Successfully. Please Login To Agrorent account To View detail' 
+                    message+=f'Some Details 1] Required from --> {required_from} , Required Till -->{required_till}, Tool Owner --> {tool_owner}'
+                    send_email(sub,message,request.user.email) # Send email to Person Who take Tool On rent 
+                    return HttpResponse("1")#to indicate Booking Done Succesfully...
+
         else:
             return redirect("/sign_in")
 
@@ -220,7 +290,14 @@ class Tools:
                 location = request.POST.get('location')
                 tool_type = request.POST.get('tool_type')
                 tools_data_lst=[]
-                tools_data= Tool.objects.all()
+                tools_data=''
+                try:
+                    if Tool.objects.filter(location=location.lower(),tool_type=tool_type).exists():
+                        tools_data= Tool.objects.all().filter(location=location,tool_type=tool_type)
+                    else:
+                        tools_data= Tool.objects.all()
+                except:
+                    tools_data= Tool.objects.all()
                 for i in tools_data:
                     tools_data_lst.append(i)
                 context={
@@ -257,7 +334,7 @@ class Tools:
                     'status':"1",
                     }
                    
-                    return render(request,"add_tool.html",context) #return context= 1 To indicate all OK
+                    return render(request,"add_tool.html",context) #return context = 1 To indicate all OK
                 else:
                     context={
                         'form':form,
@@ -298,13 +375,21 @@ class Tools:
             tool_id = request.GET.get("tool_id")
             action_btn_status = request.GET.get("action_btn_status")
             tool_booked_status=2
+            tool_booked_data_lst=[]
+            #<------------------------------------->
             if(tool_still_booked(tool_id)==1):
+                # if tool is still booked get the data of tool and booking  owner 
                 tool_booked_status = 1
+                tool_booked_data=Booking.objects.filter(tool_id=tool_id,is_booked=True).values()
+                for i in tool_booked_data:
+                    tool_booked_data_lst.append(i)
+
+            #<-------------------------------------->
             if(tool_still_booked(tool_id==-1)):
                 tool_booked_status= -1
             if (tool_still_booked(tool_id)==0):
                 tool_booked_status = 0
-            #<------------------------->
+            #<-------------------------------------->
             request_send_status=0
             request_data=''
             try:
@@ -324,6 +409,7 @@ class Tools:
             context={
                     "tools_data_lst":tools_data_lst,
                     "tool_booked_status":tool_booked_status,
+                    "tool_booked_data_lst":tool_booked_data_lst,
                     "request_send_status":request_send_status,
                     "request_data":request_data,
                     "action_btn_status":action_btn_status,

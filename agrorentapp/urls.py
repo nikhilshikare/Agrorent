@@ -20,6 +20,7 @@ urlpatterns = [
     path('upload_adhar',views.upload_adhar,name='upload_adhar'),
 
     #<--------- Adhar Upload releted path / urls Ends here ------->
+
     #<--------- Class Tools releted path / urls start here ------->
     path('add_tools',views.Tools.add_tools,name='add_tools'),
     path('my_tools',views.Tools.my_tools,name='my_tools'),
@@ -28,6 +29,7 @@ urlpatterns = [
     path('delete_tool',views.Tools.delete_tool,name='delete_tool'),
     path('search_tool',views.Tools.search_tool,name='search_tool'),
     #<--------- Class Tools releted path / urls ends here ------->
+
     #<--------- Class Request releted path / urls start here ------->
     path('requests_action',views.Request_Tool.requests_action,name='requests_action'),
     path('requests',views.Request_Tool.requests,name='requests'),
@@ -36,6 +38,8 @@ urlpatterns = [
 
     #<--------- Booking releted path / urls start here ------->
     path('my_booking',views.Booking_Tool.my_booking,name='my_booking'),
+    path('unrent_tool',views.Booking_Tool.unrent_tool,name='unrent_tool'),
+    path('dashboard',views.Booking_Tool.dashboard,name='dashboard'),
     path('book_tool',views.Request_Tool.book_tool,name='book_tool'),
     #<--------- Booking releted path / urls ends here ------->
 

@@ -48,6 +48,13 @@ path_and_rename = PathRename("images")
 
 #<***********image Renaming According to Id  Ends Here here ************>
 
+class locationField(models.CharField):
+    def __init__(self, *args, **kwargs):
+        super(locationField, self).__init__(*args, **kwargs)
+
+    def get_prep_value(self, value):
+        return str(value).lower()
+
 class Tool(models.Model):
     tool_id     = models.CharField(unique=True ,primary_key=True, null=False ,max_length=20)#'Phone + 6 digit random no'
     username    = models.CharField(unique=False ,max_length=50,blank=False)#ownerusername
@@ -56,7 +63,7 @@ class Tool(models.Model):
     tool_info   = models.TextField(blank=True) 
     rent_price  = models.CharField(max_length=9)
     tool_type = models.CharField(max_length=200,blank=True)
-    location = models.CharField(max_length=200,blank=True)
+    location = locationField(max_length=200,blank=True)
     tool_photo = models.ImageField(upload_to=path_and_rename)
 
     def __str__(self):

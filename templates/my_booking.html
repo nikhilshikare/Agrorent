@@ -16,6 +16,11 @@
     overflow: auto;
     opacity: 0.95;
 }
+p{
+  font-size: smaller;
+  padding: 0px;
+  margin: 0px;
+}
 
 
 </style>
@@ -46,7 +51,7 @@
           <a style="font-weight: bolder; color: #49ce6e;" class="nav-link" href="/my_tools">My Tools</a>
         </li>
         <li class="nav-item">
-          <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="#">DashBoard</a>
+          <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="/dashboard">DashBoard</a>
         </li>
         <li class="nav-item">
           <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/requests?status=2">Requests</a>
@@ -85,7 +90,7 @@
                 Requested Till -->    {{i.required_till}}<br>
                 Booking Time  -->    {{i.booking_time}} <br>
                 Booking Amount Paid -->    {{i.booking_amt_paid}}<br>
-                Tool Id -->    {{i.tool_id}}<br>
+                Tool Id --> <a href="/show_info?tool_id={{i.tool_id}}">{{i.tool_id}}</a><br>
               </p>
               <hr>
             </a>
@@ -111,11 +116,13 @@
                   Requested Till -->    {{i.required_till}}<br>
                   Booking Time  -->    {{i.booking_time}} <br>
                   Booking Amount Paid -->    {{i.booking_amt_paid}}<br>
-                  Tool Id -->    {{i.tool_id}}<br>
+                  Tool Id --> <a href="/show_info?tool_id={{i.tool_id}}">{{i.tool_id}}</a><br>
                 </p>
+                <hr>
+                </a>
                 <p class="mb-0">
                   <h5 style="font-weight:bolder;">Tool Owner -->{{request.user.first_name}} {{request.user.last_name}}</h5>
-                  <h5 style="font-weight:bolder;">Requested From Username --> {{i.owner_name}}</h5></p>
+                  <h5 style="font-weight:bolder;">Requested From Username --> {{i.rented_to}}</h5></p>
                 <p class="mb-0"></p>
               </div>
       {% endfor %}

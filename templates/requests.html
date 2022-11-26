@@ -45,7 +45,7 @@
           <a style="font-weight: bolder; color: #49ce6e;" class="nav-link" href="/my_tools">My Tools</a>
         </li>
         <li class="nav-item">
-          <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="#">DashBoard</a>
+          <a style="font-weight: bolder; color: #6c88cf" class="nav-link" href="/dashboard">DashBoard</a>
         </li>
         <li class="nav-item">
           <a style="font-weight: bolder; color: #73ce49;" class="nav-link" href="/requests?status=2">Requests</a>
@@ -86,6 +86,12 @@
               </p>
               <hr>
             </a>
+            {% if i.is_accepted %}
+                <h5><b style="color:green;">  Request Accepted</b></h5>
+            {% endif %}
+            {% if  i.is_rejected %}
+                  <h5><b style="color:red">Rejected Request</b></h5>
+            {% endif %}
               <p class="mb-0"></p>
             </div>
     {% endfor %}

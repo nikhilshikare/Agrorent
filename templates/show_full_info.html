@@ -197,6 +197,42 @@
 <!-- *************************javascript Start From here*************** -->
 <script type="text/javascript">
 
+
+ //  <!-- ----------------Scripts for Un Renting  Tool Start  Form------------------- -->
+ $(document).on('submit', '#unrent_tool_form', function (e) {
+  document.getElementById("unrent_tool").disabled = true;
+  var spinner = '<div class="spinner-border text-success" role="status"><span class="visually-hidden">Loading...</span></div> Please Wait..'
+  $('#unrent_tool').html(spinner);
+    e.preventDefault();
+    $.ajax({
+        type: 'POST',
+        url: '/unrent_tool',
+        data: {
+          tool_id: $('#tool_id1').val(),
+          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+        },
+        success: function (data) {
+          if(data=="1"){
+              $('#unrent_tool').text("Unrent Tool");
+              swal('Success!!','<b>Tool Un-Rented Succesfully..</b>','success');
+              my_timeout = setTimeout(()=>{ clearTimeout(my_timeout);    window.location =  "/my_tools";},1400);
+          }
+          else{
+              $('#unrent_tool').html("UnRent Tool");
+              document.getElementById("unrent_tool").disabled = false;
+              sweetAlert("Error!!", "<b><b style='color:red';>Something Went wrong..</b>Failed To Un-Rent Tool!</b>", "error");
+          }
+        },
+        error: function (response) {
+            alert('Something Went Wrong...');
+        }
+
+    });
+});
+
+
+
+
   //  <!-- ----------------scripts for Deleting tool Form------------------- -->
   $(document).on('submit', '#delete_tool_form', function (e) {
       document.getElementById("delete_tool").disabled = true;
@@ -362,7 +398,7 @@
                 <div class="clearfix"></div>
             </a>
           
-                    {% if request.user.username == i.username %}
+                  {% if request.user.username == i.username %}
                         <div class="mb-3" style="background-color: white;">
                           <div id="btn_div" class="my-1 mb-1">
                                   <form id="delete_tool_form">
@@ -372,18 +408,40 @@
                                   </form>
                           </div>
 
+                          
+
                           <hr style="height:5px">
-                          <div class="my-1 mb-1 px-1">
-                            <p style="border: 3px dotted #ce4949; ">Rented To --> <b>Rented To Name</b><br>
-                              Booking Id --> <b>booking_id</b><br>
-                              Booking Amount Paid  --> <b>booking_amt_paid</b><br>
-                              Booked from date  --> <b>Booked From date</b><br>
-                              Rented Till --> <b>Date till</b>
-                            </p>
-                          </div>
-                        </div>
+
                       
-                    {% else %}
+                          <div class="my-1 mb-1 px-1">
+                            {% if tool_booked_status == 1 %}
+                                {% for j in tool_booked_data_lst  %}
+                                
+                                <h3 align='center' style='color:#f01d07;background-color:rgb(41, 39, 39)'>Tool is  Booked</h3>
+                                  <p style="border: 3px dotted #ce4949; ">Rented To --> <b>{{j.rented_to}}</b><br>
+                                    Booking Id --> <b>{{j.booking_id}}</b><br>
+                                    Booking Time --> <b>{{j.booking_time}}</b><br>
+                                    Booking Amount Paid  --> <b>{{j.booking_amt_paid}}</b><br>
+                                    Booked from date  --> <b>{{j.required_from}}</b><br>
+                                    Rented Till --> <b>{{j.required_till}}</b>
+                                  </p> 
+                                {% endfor %}      
+                            {% endif %}
+                          
+                          </div>
+
+                                  {% if tool_booked_status == 1 %}
+                                 <i><h5 align='center' style='color:#ff1900;font-weight:bolder;background-color:#eddede;font-family:Times New Roman, Times, serif'>If Tool Renting Time Completed<br>and Tool is Taken Back From Rented Person <br> <b style="background-color:black;color:rgb(148, 241, 148);">Then Only Click Unrent Button </b> </h5></i> 
+                                    <div id="btn_div" class="my-1 mb-1">
+                                        <form id="unrent_tool_form">
+                                          {% csrf_token %}
+                                          <input type="hidden" name="tool_id1" id="tool_id1" value={{i.tool_id}}>
+                                        <button id="unrent_tool" type="submit" class="btn btn-info mx-2">UnRent</button>
+                                      </form>
+                                    <div>
+                                  {% endif %}
+                          </div> 
+                  {% else %}
                     <div class="mb-3" style="background-color: white;">
                       <div id="btn_div" class="my-2 mb-3">
                               <form id="request_form">
@@ -412,34 +470,50 @@
                       <div class="my-1 mb-1 px-1">
                         <h4 align="center">Owner Will See Following info..</h4>
                         <p style="border: 3px dotted #ce4949; ">Your Name <b>{{request.user.first_name }} {{ request.user.last_name}}</b><br>
-                         {% if request_data %}
-                            {% for i in request_data %}
-                            Requested  From Date --> <b >{{i.required_from}}</b><br>
-                            Requested  Till Date  --> <b >{{i.required_till}}</b><br>
-                                {% if i.is_accepted %}
-                                      <h4><b style="color:green;">Your Request is Accepted By Owner</b></h4><br>
-                                      <h4><b style="color:red;">Please Conform Booking Within 24 hrs</b></h4>
-                                      <form id="book_form">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="tool_id" id="tool_id" value={{i.tool_id}}>
-                                        <input type="hidden" name="tool_owner" id="tool_owner" value={{i.username}}>
-                                        <input type="hidden" name="request_id" id="request_id" value={{i.request_id}}>
-                                        <hr style="height:6px;background-color:#089000;">
-                                      <button  id="book_tool_btn" type="submit" class="btn btn-success  mx-3">Conform Booking</button>
-                                    </form>
-                                {% endif %}
-                                {% if i.is_rejected %}
-                                    <h4><b style="color:red;">Your Request is Rejected By Owner</b></h4>
-                                {% endif %}
-                            {% endfor %}
-                         {% else %}
-                          Requested  From Date --> <b>You Selected date</b><br>
-                          Requested  Till Date --> <b>Date Till rented</b>
-                         {% endif %}
+                          {% if request_data %}
+                                  {% for i in request_data %}
+                                  Requested  From Date --> <b >{{i.required_from}}</b><br>
+                                  Requested  Till Date  --> <b >{{i.required_till}}</b><br>
+                                      {% if i.is_accepted %}
+                                            <h4><b style="color:green;">Your Request is Accepted By Owner</b></h4><br>
+                                            <h4><b style="color:red;">Please Conform Booking Within 24 hrs</b></h4>
+                                            <form id="book_form">
+                                              {% csrf_token %}
+                                              <input type="hidden" name="tool_id" id="tool_id" value={{i.tool_id}}>
+                                              <input type="hidden" name="tool_owner" id="tool_owner" value={{i.username}}>
+                                              <input type="hidden" name="request_id" id="request_id" value={{i.request_id}}>
+                                              <hr style="height:6px;background-color:#089000;">
+                                            <button  id="book_tool_btn" type="submit" class="btn btn-success  mx-3">Conform Booking</button>
+                                          </form>
+                                      {% endif %}
+                                      {% if i.is_rejected %}
+                                          <h4><b style="color:red;">Your Request is Rejected By Owner</b></h4>
+                                      {% endif %}
+                                  {% endfor %}
+                              {% else %}
+                                Requested  From Date --> <b>You Selected date</b><br>
+                                Requested  Till Date --> <b>Date Till rented</b>
+                          {% endif %}
+
                         </p>
+                          <!-- if tool is already booked by someone -->
+
+                          {% if tool_booked_status == 1 %}
+                          {% for j in tool_booked_data_lst  %}
+                          <h3 align='center' style='color:#f01d07;background-color:rgb(41, 39, 39)'>Tool is  Booked</h3>
+                            <p style="border: 3px dotted #ce4949; ">
+                              Rented from Date  --> <b>{{j.required_from}}</b><br>
+                              Rented Till Date --> <b>{{j.required_till}}</b>
+                            </p> 
+                          {% endfor %}      
+                      {% endif %}
+
+
+                          <!-- END OF IF tool is already booked by someone -->
                       </div>
                     </div>
-                    {% endif %}
+
+                  {% endif %}
           {% endfor %}
         {% else %}
         <p> <h2>Tool Not Found/Something Went Wrong<br>Looks Like<b style='color:red'> Invalid Tool id or Tool Is Deleted</b></h2></p>

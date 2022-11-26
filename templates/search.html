@@ -184,6 +184,11 @@
 
 
 </style>
+
+
+
+
+
 <!-- navbar for home start here -->
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -242,13 +247,13 @@
 <form action="/search_tool" method="POST" class="mb-3">
     {% csrf_token %}
     <div class="input-group mb-3">
-        <input type="text"id="location" placeholder="Enter Place Name" class="form-control" aria-label="Text input with dropdown button">
-        <select id="tool_type" class="form-select" aria-label="Default select example">
+        <input type="text" name='location' id="location" placeholder="Enter Place Name" class="form-control" aria-label="Text input with dropdown button">
+        <select id="tool_type" name='tool_type' class="form-select" aria-label="Default select example">
             <option selected>Select tool Type</option>
-            <option value="tractor">Tractor</option>
-            <option value="cutter">Cutter</option>
-            <option value="sprayer">Sprayer</option>
-            <option value="other">Other</option>
+            <option value="Tractor">Tractor</option>
+            <option value="Cutter">Cutter</option>
+            <option value="Sprayer">Sprayer</option>
+            <option value="Other">Other</option>
           </select>
         <button type="submit" class="btn btn-success">Search</button>
       </div>
