@@ -10,16 +10,6 @@ import datetime
 import schedule , threading , time
 from django.core.files.storage import default_storage
 
-#<*********************************************************>
-
-# username and Password for django super user
-# Username:-nikhil & Password:-nikhil9869
-# (Please creatE SuperUser Then Store It here If you Have HABIT Of Forgeting passwords)
-#Email And Password:
-#Email :- agrorent2022@gmail.com && Password:-agrorent9869@#
-
-#<*********************************************************>
-
 
 #<-------------------keep run code infinite to delete Request After Every 24 hrs ---------------------------->
 # def del_request():
